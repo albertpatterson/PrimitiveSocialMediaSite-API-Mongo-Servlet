@@ -1,4 +1,4 @@
-# PrimitiveSocialMediaSite-API-Servlet
+# PrimitiveSocialMediaSite-API-Mongo-Servlet
 This will be an API for the Primitive Social Media Site project. This version of the API will be written in Java using servlets to provide access to the following resources by the indicated methods:
 - [ ] User Information
   - [ ] post: create a new user (sign up)
