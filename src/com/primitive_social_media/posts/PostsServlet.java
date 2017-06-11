@@ -1,4 +1,4 @@
-package com.primative_social_medial.posts;
+package com.primitive_social_media.posts;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -7,13 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Iterator;
-import java.util.Stack;
 
 /**
  * Created by apatters on 6/11/2017.
  */
-@WebServlet(name = "Servlet")
+@WebServlet(name = "UsersServlet")
 public class PostsServlet extends HttpServlet {
 
     public MockPostManager postManager = new MockPostManager();

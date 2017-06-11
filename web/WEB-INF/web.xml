@@ -4,13 +4,22 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
+    <!--<servlet>-->
+        <!--<servlet-name>posts</servlet-name>-->
+        <!--<servlet-class>com.primitive_social_media.posts.PostsServlet</servlet-class>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>posts</servlet-name>-->
+        <!--<url-pattern>/posts</url-pattern>-->
+    <!--</servlet-mapping>-->
+
     <servlet>
-        <servlet-name>posts</servlet-name>
-        <servlet-class>com.primative_social_medial.posts.PostsServlet</servlet-class>
+        <servlet-name>users</servlet-name>
+        <servlet-class>com.primitive_social_media.users.UsersServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>posts</servlet-name>
-        <url-pattern>/posts</url-pattern>
+        <servlet-name>users</servlet-name>
+        <url-pattern>/users</url-pattern>
     </servlet-mapping>
 </web-app>

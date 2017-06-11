@@ -1,7 +1,7 @@
-package com.primative_social_medial.posts;
+package com.primitive_social_media.posts;
 
 import java.util.Iterator;
-import java.util.Stack;
+import java.util.ArrayList;
 
 /**
  * Created by apatters on 6/11/2017.
@@ -11,16 +11,16 @@ class Post{
     private String poster;
     private String content;
 
-    public static String toJSON(Stack<Post> posts){
+    public static String toJSON(ArrayList<Post> posts){
         String postsInner = "";
 
         Iterator<Post> postItr = posts.iterator();
         while(postItr.hasNext()){
             Post currentPost = postItr.next();
             if(postItr.hasNext()){
-                postsInner += String.format("%s, ", currentPost.toJSONString());
+                postsInner += String.format("%s, ", currentPost.toJSON());
             }else{
-                postsInner += currentPost.toJSONString();
+                postsInner += currentPost.toJSON();
             }
         }
 
@@ -32,7 +32,7 @@ class Post{
         this.content=content;
     }
 
-    public String toJSONString(){
+    public String toJSON(){
         return String.format("{\"poster\":\"%s\", \"content\":\"%s\"}",poster, content);
     }
 }
