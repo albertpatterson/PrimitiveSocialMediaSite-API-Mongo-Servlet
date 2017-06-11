@@ -43,7 +43,7 @@ public class User {
 
     public String toJSON(){
         String dateStr = DOB.toString();
-        return String.format("\"password\":%s, \"location\":%s, \"DOB\":%s, \"business\":%s, \"picture\":%s", password, location, dateStr, business, picture);
+        return String.format("{\"name\":%s, \"password\":%s, \"location\":%s, \"DOB\":%s, \"business\":%s, \"picture\":%s}", name, password, location, dateStr, business, picture);
     }
 
     public User toPrivate(){

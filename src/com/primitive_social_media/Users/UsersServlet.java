@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 /**
  * Created by apatters on 6/11/2017.
  */
-@WebServlet(name = "UsersServletjd")
+@WebServlet(name = "UsersServlet")
 public class UsersServlet extends HttpServlet {
 
     private MockUserManager userManager = new MockUserManager();
