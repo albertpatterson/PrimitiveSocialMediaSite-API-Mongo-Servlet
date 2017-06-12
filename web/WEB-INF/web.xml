@@ -22,4 +22,15 @@
         <servlet-name>users</servlet-name>
         <url-pattern>/users</url-pattern>
     </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>sessions</servlet-name>
+        <servlet-class>com.primitive_social_media.sessions.SessionServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>sessions</servlet-name>
+        <url-pattern>/sessions</url-pattern>
+    </servlet-mapping>
 </web-app>
