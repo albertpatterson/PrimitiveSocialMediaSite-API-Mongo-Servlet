@@ -43,20 +43,16 @@ public class User {
 
     public String toJSON(){
         String dateStr = DOB.toString();
-        return String.format("{\"name\":%s, \"password\":%s, \"location\":%s, \"DOB\":%s, \"business\":%s, \"picture\":%s}", name, password, location, dateStr, business, picture);
+        return String.format("{\"name\":%s, \"location\":%s, \"DOB\":%s, \"business\":%s, \"picture\":%s}", name, location, dateStr, business, picture);
     }
 
-    public User toPrivate(){
-        String fakePassword = "";
-        return new User(name, fakePassword, location, DOB, business, picture);
-    }
 
     public static String toJSON(HashMap<String, User> users){
         String usersInner = "";
 
         Iterator<String> usernameItr = users.keySet().iterator();
         while(usernameItr.hasNext()){
-            User currentUser = users.get(usernameItr.next()).toPrivate();
+            User currentUser = users.get(usernameItr.next());
             if(usernameItr.hasNext()){
                 usersInner += String.format("%s, ", currentUser.toJSON());
             }else{
