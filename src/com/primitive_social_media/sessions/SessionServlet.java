@@ -35,34 +35,32 @@ public class SessionServlet extends HttpServlet {
         out.flush();
     }
 
+    protected SessionService.ValidationResultHandler getSession = (HttpServletRequest request, HttpServletResponse response)-> {
+        response.setContentType("text/plain");
+        PrintWriter out = response.getWriter();
+        out.println("success");
+        out.flush();
+
+        System.out.println("valid session");
+    };
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        SessionService.ValidationResultHandler handleSuccess = ()->{
-            response.setContentType("text/plain");
-            PrintWriter out = response.getWriter();
-            out.println("success");
-            out.flush();
-
-            System.out.println("valid session");
-        };
-
-        sessionService.validateThenRespond(request, handleSuccess, response);
+        sessionService.validateThenRespond(request, response, getSession);
     }
 
+    protected SessionService.ValidationResultHandler deleteSession = (HttpServletRequest request, HttpServletResponse response)-> {
+        sessionService.deleteSession(request);
+
+        response.setContentType("text/plain");
+        PrintWriter out = response.getWriter();
+        out.println("success");
+        out.flush();
+
+        System.out.println("Deleted session");
+    };
+
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-        SessionService.ValidationResultHandler handleSuccess = ()->{
-            sessionService.deleteSession(request);
-
-            response.setContentType("text/plain");
-            PrintWriter out = response.getWriter();
-            out.println("success");
-            out.flush();
-
-            System.out.println("Deleted session");
-        };
-
-        sessionService.validateThenRespond(request, handleSuccess, response);
+        sessionService.validateThenRespond(request, response, deleteSession);
     }
 
     public void destroy(){

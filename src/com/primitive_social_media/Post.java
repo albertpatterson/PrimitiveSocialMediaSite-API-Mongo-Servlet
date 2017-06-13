@@ -1,4 +1,4 @@
-package com.primitive_social_media.posts;
+package com.primitive_social_media;
 
 import java.util.Iterator;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.ArrayList;
 /**
  * Created by apatters on 6/11/2017.
  */
-class Post{
+public class Post{
 
     private String poster;
     private String content;
@@ -27,7 +27,7 @@ class Post{
         return String.format("[%s]", postsInner);
     }
 
-    Post(String poster, String content){
+    public Post(String poster, String content){
         this.poster=poster;
         this.content=content;
     }

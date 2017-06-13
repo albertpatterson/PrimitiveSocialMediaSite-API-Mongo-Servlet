@@ -1,4 +1,4 @@
-package com.primitive_social_media.users;
+package com.primitive_social_media;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

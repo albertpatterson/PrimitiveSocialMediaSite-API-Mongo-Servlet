@@ -1,6 +1,8 @@
 package com.primitive_social_media.posts;
 
 
+import com.primitive_social_media.Post;
+
 import java.util.ArrayList;
 
 /**

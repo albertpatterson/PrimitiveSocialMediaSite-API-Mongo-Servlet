@@ -1,5 +1,11 @@
 package com.primitive_social_media.users;
 
+import com.primitive_social_media.User;
+import com.primitive_social_media.database.DatabaseService;
+import com.primitive_social_media.database.MockDatabaseService;
+import com.primitive_social_media.sessions.SessionService;
+import com.primitive_social_media.sessions.SessionServlet;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,11 +20,12 @@ import java.io.PrintWriter;
 @WebServlet(name = "UsersServlet")
 public class UsersServlet extends HttpServlet {
 
-    private MockUserManager userManager = new MockUserManager();
+    private DatabaseService databaseService = new MockDatabaseService();
+    private SessionService sessionService = new SessionService();
 
     public void init(){
 
-        userManager.connect();
+        databaseService.connect();
 
         System.out.println("Initialized UserServlet");
     }
@@ -28,9 +35,11 @@ public class UsersServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String query = request.getParameter("query");
 
-        String usersJSON = User.toJSON(userManager.getUsers(query));
+
+
+        String query = request.getParameter("name");
+        String usersJSON = User.toJSON(databaseService.findUsers(query));
 
         response.setContentType("application/json; charset=UTF-8");
         PrintWriter out = response.getWriter();
@@ -41,6 +50,8 @@ public class UsersServlet extends HttpServlet {
     }
 
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+
         String name = request.getParameter("name");
         String password = request.getParameter("password");
         String location = request.getParameter("location");
@@ -49,7 +60,7 @@ public class UsersServlet extends HttpServlet {
         String picture = request.getParameter("picture");
 
         User newUser = new User(name, password, location, DOBString, business, picture);
-        userManager.putUser(newUser);
+        databaseService.updateUser(newUser);
 
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
@@ -59,10 +70,10 @@ public class UsersServlet extends HttpServlet {
         System.out.println("Put user " + name);
     }
 
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected SessionService.ValidationResultHandler deleteUser = (HttpServletRequest request, HttpServletResponse response)->{
         String name = request.getParameter("name");
 
-        userManager.deleteUser(name);
+        databaseService.deleteUser(name);
 
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
@@ -70,11 +81,15 @@ public class UsersServlet extends HttpServlet {
         out.flush();
 
         System.out.println("Deleted user " + name);
+    };
+
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        sessionService.validateThenRespond(request, response, deleteUser);
     }
 
     public void destroy(){
 
-        userManager.close();
+        databaseService.close();
         System.out.println("destroyed UserServlet");
     }
 }

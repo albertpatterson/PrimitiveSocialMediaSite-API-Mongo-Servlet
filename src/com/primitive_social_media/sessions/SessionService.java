@@ -1,5 +1,8 @@
 package com.primitive_social_media.sessions;
 
+import com.primitive_social_media.database.DatabaseService;
+import com.primitive_social_media.database.MockDatabaseService;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -14,6 +17,8 @@ import java.util.function.Function;
  */
 public class SessionService {
 
+    private DatabaseService databaseService = new MockDatabaseService();
+
     public void connect(){
 
     }
@@ -27,7 +32,8 @@ public class SessionService {
         // create session
 
         // return result
-        boolean check = username.equals(password);
+        boolean check = databaseService.validateCredentials(username, password);
+
         if(check){
             HttpSession session = request.getSession();
             session.setAttribute("username", username);
@@ -52,22 +58,33 @@ public class SessionService {
     }
 
     public interface ValidationResultHandler{
-        void respond() throws IOException;
+        void respond(HttpServletRequest request, HttpServletResponse response) throws IOException;
     }
 
-    public void validateThenRespond(HttpServletRequest request, ValidationResultHandler successHandler, HttpServletResponse response) throws IOException {
-        validateThenRespond(request, successHandler, ()->defaultValidationFailure(response));
-    }
-
-    private void defaultValidationFailure(HttpServletResponse response) throws IOException {
+    private ValidationResultHandler defaultValidationFailureHandler = (request, response)->{
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+    };
+
+    public void validateThenRespond(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    ValidationResultHandler successHandler) throws IOException {
+
+
+        validateThenRespond(request, response, successHandler, defaultValidationFailureHandler);
     }
 
-    public void validateThenRespond(HttpServletRequest request, ValidationResultHandler validationSuccessHandler, ValidationResultHandler validationFailureHandler) throws IOException{
+//    private void defaultValidationFailure(HttpServletResponse response) throws IOException {
+//        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//    }
+
+    public void validateThenRespond(HttpServletRequest request, HttpServletResponse response,
+                                    ValidationResultHandler validationSuccessHandler,
+                                    ValidationResultHandler validationFailureHandler) throws IOException{
+
         if(validateSession(request)){
-            validationSuccessHandler.respond();
+            validationSuccessHandler.respond(request, response);
         }else{
-            validationFailureHandler.respond();
+            validationFailureHandler.respond(request, response);
         }
     }
 }
