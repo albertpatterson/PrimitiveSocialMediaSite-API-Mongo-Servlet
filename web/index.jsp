@@ -24,10 +24,15 @@
     <button id="deletePost" onclick="deletePost()">Delete Post</button>
     <script>
 
-      getPosts();
+      signIn(getPosts);
+
+      function signIn(callback){
+        $.post('/sessions', {username: 'Cam', password: 'PW1'}, callback);
+      }
+
 
       function getPosts(){
-        $.get('/posts', updatePosts);
+        $.get('/posts', {username: "Cam", poster: "Cam", type:"own"}, updatePosts);
       }
 
       function updatePosts(posts){
@@ -45,9 +50,10 @@
       }
 
       function addPost() {
-        var poster = document.getElementById("poster").value;
+        var poster = "Cam";//document.getElementById("poster").value;
         var content = document.getElementById("content").value;
-        $.post('/posts', {poster, content}, function () {
+
+        $.post('/posts', {username: poster, poster, content}, function () {
           getPosts();
         })
       }
@@ -55,7 +61,7 @@
       function deletePost(){
         var index = $("#index").val();
         $.ajax({
-          url: '/posts' + '?' + $.param({index}),
+          url: '/posts' + '?' + $.param({index, username: "Cam"}),
           method: 'DELETE',
           success: getPosts
         });
