@@ -2,6 +2,7 @@ package com.primitive_social_media;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,6 +17,11 @@ public class User {
     public Date DOB;
     public String business;
     public String picture;
+
+    public ArrayList<String> followers = new ArrayList<>();
+    public ArrayList<Integer> followedPosts = new ArrayList<>();
+    public ArrayList<Integer> ownPosts = new ArrayList<>();
+    public ArrayList<Integer> messages = new ArrayList<>();
 
     public User(String name, String password, String location, String DOBString, String business, String picture){
         this(name, password, location, business, picture);

@@ -28,6 +28,7 @@ public class SessionServlet extends HttpServlet {
             out.println("success");
             System.out.println("Signed In");
         }else{
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
             out.println("Invalid username and/or password");
             System.out.println("Failed to Signed In");
         }
@@ -35,7 +36,7 @@ public class SessionServlet extends HttpServlet {
         out.flush();
     }
 
-    protected SessionService.ValidationResultHandler getSession = (HttpServletRequest request, HttpServletResponse response)-> {
+    protected void getSession(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
         out.println("success");
@@ -45,10 +46,12 @@ public class SessionServlet extends HttpServlet {
     };
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        sessionService.validateThenRespond(request, response, getSession);
+        System.out.println("here");
+
+        sessionService.validateThenRespond(request, response, ()->getSession(request, response));
     }
 
-    protected SessionService.ValidationResultHandler deleteSession = (HttpServletRequest request, HttpServletResponse response)-> {
+    protected void deleteSession(HttpServletRequest request, HttpServletResponse response) throws IOException {
         sessionService.deleteSession(request);
 
         response.setContentType("text/plain");
@@ -60,7 +63,7 @@ public class SessionServlet extends HttpServlet {
     };
 
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        sessionService.validateThenRespond(request, response, deleteSession);
+        sessionService.validateThenRespond(request, response, ()->deleteSession(request, response));
     }
 
     public void destroy(){

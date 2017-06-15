@@ -4,7 +4,6 @@ import com.primitive_social_media.Post;
 import com.primitive_social_media.User;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -20,19 +19,21 @@ public interface DatabaseService {
 
     public HashMap<String, User> findUsers(String query);
 
-    public ArrayList<Post> getPosts(String username);
+    public ArrayList<Post> getPosts(ArrayList<Integer> indexes);
 
-    public ArrayList<Post> getMessages(String username);
+//    public ArrayList<Post> getMessages(String username);
 
     public void updateUser(User user);
 
-    public void addPost(Post newPost, String username);
+    public int addPost(Post newPost);
 
-    public void addMessage(Post newMessage, String username);
+//    public void addMessage(Post newMessage, String username);
 
     public void deleteUser(String username);
 
-    public void deletePost(String username, int postIdx);
+    public void deletePost(int postIdx);
 
-    public void deleteMessage(String username, int messageIdx);
+    public int countPosts();
+
+//    public void deleteMessage(String username, int messageIdx);
 }

@@ -17,10 +17,10 @@ import java.util.function.Function;
  */
 public class SessionService {
 
-    private DatabaseService databaseService = new MockDatabaseService();
+    private DatabaseService databaseService = MockDatabaseService.getInstance();
 
     public void connect(){
-
+        databaseService.connect();
     }
 
     public boolean signIn(HttpServletRequest request){
@@ -58,19 +58,22 @@ public class SessionService {
     }
 
     public interface ValidationResultHandler{
-        void respond(HttpServletRequest request, HttpServletResponse response) throws IOException;
+//        void respond(HttpServletRequest request, HttpServletResponse response) throws IOException;
+        void respond() throws IOException;
     }
-
-    private ValidationResultHandler defaultValidationFailureHandler = (request, response)->{
+    private void defaultValidationFailureHandler(HttpServletRequest request, HttpServletResponse response){
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
     };
+//    private ValidationResultHandler defaultValidationFailureHandler = (request, response)->{
+//        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+//    };
 
     public void validateThenRespond(HttpServletRequest request,
                                     HttpServletResponse response,
                                     ValidationResultHandler successHandler) throws IOException {
 
 
-        validateThenRespond(request, response, successHandler, defaultValidationFailureHandler);
+        validateThenRespond(request, response, successHandler, ()->defaultValidationFailureHandler(request, response));
     }
 
 //    private void defaultValidationFailure(HttpServletResponse response) throws IOException {
@@ -80,11 +83,15 @@ public class SessionService {
     public void validateThenRespond(HttpServletRequest request, HttpServletResponse response,
                                     ValidationResultHandler validationSuccessHandler,
                                     ValidationResultHandler validationFailureHandler) throws IOException{
-
         if(validateSession(request)){
-            validationSuccessHandler.respond(request, response);
+            validationSuccessHandler.respond();
         }else{
-            validationFailureHandler.respond(request, response);
+            validationFailureHandler.respond();
         }
+//        if(validateSession(request)){
+//            validationSuccessHandler.respond(request, response);
+//        }else{
+//            validationFailureHandler.respond(request, response);
+//        }
     }
 }

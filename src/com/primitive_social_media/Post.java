@@ -32,6 +32,11 @@ public class Post{
         this.content=content;
     }
 
+    public void clear(){
+        poster="";
+        content="";
+    }
+
     public String toJSON(){
         return String.format("{\"poster\":\"%s\", \"content\":\"%s\"}",poster, content);
     }

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 
 /**
  * Created by apatters on 6/11/2017.
@@ -20,13 +21,10 @@ import java.io.PrintWriter;
 @WebServlet(name = "UsersServlet")
 public class UsersServlet extends HttpServlet {
 
-    private DatabaseService databaseService = new MockDatabaseService();
+    private UserService userService = UserService.getInstance();
     private SessionService sessionService = new SessionService();
 
     public void init(){
-
-        databaseService.connect();
-
         System.out.println("Initialized UserServlet");
     }
 
@@ -34,62 +32,88 @@ public class UsersServlet extends HttpServlet {
         doPut(request, response);
     }
 
+
+
+
+
+    protected void getUserAfterAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String username = request.getParameter("username");
+
+        String query = "^"+username+"$";
+        HashMap<String, User> matches = userService.findUsers(query);
+
+        int nMatches = matches.size();
+        if(nMatches==1){
+            response.setStatus(HttpServletResponse.SC_OK);
+            User user = matches.get(username);
+            response.setContentType("application/json");
+            PrintWriter out = response.getWriter();
+            out.print(user.toJSON());
+            out.flush();
+        }else{
+            if(nMatches>1){
+                System.out.println(String.format("%d matches found for query %s", nMatches, query));
+            }
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+        }
+    }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-
-
-        String query = request.getParameter("name");
-        String usersJSON = User.toJSON(databaseService.findUsers(query));
-
-        response.setContentType("application/json; charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        out.print(usersJSON);
-        out.flush();
-
-        System.out.println("Sent users matching " + query);
+        sessionService.validateThenRespond(request, response, ()->getUserAfterAuth(request, response));
     }
 
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-
-        String name = request.getParameter("name");
-        String password = request.getParameter("password");
-        String location = request.getParameter("location");
-        String DOBString = request.getParameter("DOB");
-        String business = request.getParameter("business");
-        String picture = request.getParameter("picture");
-
-        User newUser = new User(name, password, location, DOBString, business, picture);
-        databaseService.updateUser(newUser);
-
-        response.setContentType("text/plain");
-        PrintWriter out = response.getWriter();
-        out.print("success");
-        out.flush();
-
-        System.out.println("Put user " + name);
-    }
-
-    protected SessionService.ValidationResultHandler deleteUser = (HttpServletRequest request, HttpServletResponse response)->{
-        String name = request.getParameter("name");
-
-        databaseService.deleteUser(name);
-
-        response.setContentType("text/plain");
-        PrintWriter out = response.getWriter();
-        out.print("success");
-        out.flush();
-
-        System.out.println("Deleted user " + name);
-    };
-
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        sessionService.validateThenRespond(request, response, deleteUser);
-    }
+//    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//
+//
+//        String name = request.getParameter("name");
+//        String password = request.getParameter("password");
+//        String location = request.getParameter("location");
+//        String DOBString = request.getParameter("DOB");
+//        String business = request.getParameter("business");
+//        String picture = request.getParameter("picture");
+//
+//        User newUser = new User(name, password, location, DOBString, business, picture);
+//        databaseService.updateUser(newUser);
+//
+//        response.setContentType("text/plain");
+//        PrintWriter out = response.getWriter();
+//        out.print("success");
+//        out.flush();
+//
+//        System.out.println("Put user " + name);
+//    }
+//
+////    protected SessionService.ValidationResultHandler deleteUser = (HttpServletRequest request, HttpServletResponse response)->{
+////        String name = request.getParameter("name");
+////
+////        databaseService.deleteUser(name);
+////
+////        response.setContentType("text/plain");
+////        PrintWriter out = response.getWriter();
+////        out.print("success");
+////        out.flush();
+////
+////        System.out.println("Deleted user " + name);
+////    };
+//
+//    protected void deleteUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//        String name = request.getParameter("name");
+//
+//        databaseService.deleteUser(name);
+//
+//        response.setContentType("text/plain");
+//        PrintWriter out = response.getWriter();
+//        out.print("success");
+//        out.flush();
+//
+//        System.out.println("Deleted user " + name);
+//    };
+//    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        sessionService.validateThenRespond(request, response, ()->deleteUser(request, response));
+//    }
 
     public void destroy(){
 
-        databaseService.close();
+//        databaseService.close();
         System.out.println("destroyed UserServlet");
     }
 }
