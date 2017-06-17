@@ -39,9 +39,7 @@ public class PostsServlet extends HttpServlet {
 
         databaseService.addPost(poster, new Post(poster, content));
 
-        PrintWriter out = response.getWriter();
-        out.println("Success");
-        out.flush();
+        response.setStatus(HttpServletResponse.SC_CREATED);
 
         System.out.println("Created a Post");
     }
@@ -76,6 +74,7 @@ public class PostsServlet extends HttpServlet {
 
         String JSON = JSONConvertible.toJSONList(posts);
 
+        response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json; charset=UTF-8");
         PrintWriter out = response.getWriter();
         out.print(JSON);
@@ -100,10 +99,7 @@ public class PostsServlet extends HttpServlet {
         int index = Integer.parseInt(request.getParameter("index"));
         databaseService.deletePost(username, index);
 
-        response.setContentType("text/plain");
-        PrintWriter out = response.getWriter();
-        out.println("Success");
-        out.flush();
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
 
         System.out.println("Deleted a Post");
     }

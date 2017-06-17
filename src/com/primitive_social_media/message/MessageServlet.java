@@ -36,9 +36,7 @@ public class MessageServlet {
 
         databaseService.addMessage(poster, new Post(poster, content));
 
-        PrintWriter out = response.getWriter();
-        out.println("Success");
-        out.flush();
+        response.setStatus(HttpServletResponse.SC_CREATED);
 
         System.out.println("Created a Message");
     }
@@ -60,6 +58,7 @@ public class MessageServlet {
 
         String JSON = JSONConvertible.toJSONList(messages);
 
+        response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json; charset=UTF-8");
         PrintWriter out = response.getWriter();
         out.print(JSON);
@@ -84,10 +83,7 @@ public class MessageServlet {
         int index = Integer.parseInt(request.getParameter("index"));
         databaseService.deleteMessage(username, index);
 
-        response.setContentType("text/plain");
-        PrintWriter out = response.getWriter();
-        out.println("Success");
-        out.flush();
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
 
         System.out.println("Deleted a Post");
     }

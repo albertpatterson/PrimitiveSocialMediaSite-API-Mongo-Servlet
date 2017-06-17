@@ -20,48 +20,76 @@ public class SessionServlet extends HttpServlet {
         sessionService.connect();
     }
 
+
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.setContentType("text/plain");
-        PrintWriter out = response.getWriter();
 
         if(sessionService.signIn(request)){
-            out.println("success");
-            System.out.println("Signed In");
+            response.setStatus(HttpServletResponse.SC_CREATED);
         }else{
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            out.println("Invalid username and/or password");
-            System.out.println("Failed to Signed In");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
-
-        out.flush();
     }
 
-    protected void getSession(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/plain");
-        PrintWriter out = response.getWriter();
-        out.println("success");
-        out.flush();
 
-        System.out.println("valid session");
+
+
+
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
+    protected void getSessionAfterAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setStatus(HttpServletResponse.SC_OK);
     };
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("here");
 
-        sessionService.validateThenRespond(request, response, ()->getSession(request, response));
+        sessionService.validateThenRespond(request, response, ()->getSessionAfterAuth(request, response));
     }
 
+
+
+
+
+
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     protected void deleteSession(HttpServletRequest request, HttpServletResponse response) throws IOException {
         sessionService.deleteSession(request);
 
-        response.setContentType("text/plain");
-        PrintWriter out = response.getWriter();
-        out.println("success");
-        out.flush();
+        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
 
         System.out.println("Deleted session");
     };
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         sessionService.validateThenRespond(request, response, ()->deleteSession(request, response));
     }

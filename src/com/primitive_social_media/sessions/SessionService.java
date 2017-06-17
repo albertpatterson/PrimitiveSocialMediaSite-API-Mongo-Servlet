@@ -19,15 +19,15 @@ public class SessionService {
         databaseService.connect();
     }
 
+    /**
+     *
+     * @param request
+     * @return
+     */
     public boolean signIn(HttpServletRequest request){
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
-        // check password in db
-
-        // create session
-
-        // return result
         boolean check = databaseService.getPassword(username).equals(password);
 
         if(check){
@@ -37,6 +37,11 @@ public class SessionService {
         return check;
     }
 
+    /**
+     *
+     * @param request
+     * @return
+     */
     public boolean validateSession(HttpServletRequest request){
         String username = request.getParameter("username");
         HttpSession session = request.getSession();
@@ -44,6 +49,10 @@ public class SessionService {
         return !(sessionUsername==null)&&(sessionUsername.toString().equals(username));
     }
 
+    /**
+     *
+      * @param request
+     */
     public void deleteSession(HttpServletRequest request){
         HttpSession session = request.getSession();
         session.invalidate();
@@ -53,29 +62,38 @@ public class SessionService {
 
     }
 
+    /**
+     *
+     */
     public interface ValidationResultHandler{
-//        void respond(HttpServletRequest request, HttpServletResponse response) throws IOException;
         void respond() throws IOException;
     }
     private void defaultValidationFailureHandler(HttpServletRequest request, HttpServletResponse response){
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
     };
-//    private ValidationResultHandler defaultValidationFailureHandler = (request, response)->{
-//        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-//    };
 
+    /**
+     *
+     * @param request
+     * @param response
+     * @param successHandler
+     * @throws IOException
+     */
     public void validateThenRespond(HttpServletRequest request,
                                     HttpServletResponse response,
                                     ValidationResultHandler successHandler) throws IOException {
 
-
         validateThenRespond(request, response, successHandler, ()->defaultValidationFailureHandler(request, response));
     }
 
-//    private void defaultValidationFailure(HttpServletResponse response) throws IOException {
-//        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-//    }
-
+    /**
+     *
+     * @param request
+     * @param response
+     * @param validationSuccessHandler
+     * @param validationFailureHandler
+     * @throws IOException
+     */
     public void validateThenRespond(HttpServletRequest request, HttpServletResponse response,
                                     ValidationResultHandler validationSuccessHandler,
                                     ValidationResultHandler validationFailureHandler) throws IOException{
@@ -84,10 +102,5 @@ public class SessionService {
         }else{
             validationFailureHandler.respond();
         }
-//        if(validateSession(request)){
-//            validationSuccessHandler.respond(request, response);
-//        }else{
-//            validationFailureHandler.respond(request, response);
-//        }
     }
 }
