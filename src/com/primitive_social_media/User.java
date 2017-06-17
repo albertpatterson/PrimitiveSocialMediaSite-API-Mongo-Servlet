@@ -18,15 +18,10 @@ public class User {
     public String business;
     public String picture;
 
-    public ArrayList<String> followers = new ArrayList<>();
-    public ArrayList<Integer> followedPosts = new ArrayList<>();
-    public ArrayList<Integer> ownPosts = new ArrayList<>();
-    public ArrayList<Integer> messages = new ArrayList<>();
-
     public User(String name, String password, String location, String DOBString, String business, String picture){
         this(name, password, location, business, picture);
 
-        SimpleDateFormat formatter = new SimpleDateFormat("EEEE, dd/MM/yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
         try {
             this.DOB = formatter.parse(DOBString);
         } catch (ParseException e) {
@@ -53,19 +48,19 @@ public class User {
     }
 
 
-    public static String toJSON(HashMap<String, User> users){
-        String usersInner = "";
-
-        Iterator<String> usernameItr = users.keySet().iterator();
-        while(usernameItr.hasNext()){
-            User currentUser = users.get(usernameItr.next());
-            if(usernameItr.hasNext()){
-                usersInner += String.format("%s, ", currentUser.toJSON());
-            }else{
-                usersInner += currentUser.toJSON();
-            }
-        }
-
-        return String.format("[%s]", usersInner);
-    }
+//    public static String toJSON(HashMap<String, User> personalData){
+//        String usersInner = "";
+//
+//        Iterator<String> usernameItr = personalData.keySet().iterator();
+//        while(usernameItr.hasNext()){
+//            User currentUser = personalData.get(usernameItr.next());
+//            if(usernameItr.hasNext()){
+//                usersInner += String.format("%s, ", currentUser.toJSON());
+//            }else{
+//                usersInner += currentUser.toJSON();
+//            }
+//        }
+//
+//        return String.format("[%s]", usersInner);
+//    }
 }

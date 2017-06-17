@@ -1,4 +1,4 @@
-package com.primitive_social_media.posts;
+package com.primitive_social_media.message;
 
 import com.primitive_social_media.JSONConvertible;
 import com.primitive_social_media.Post;
@@ -7,8 +7,6 @@ import com.primitive_social_media.database.MockDatabaseService;
 import com.primitive_social_media.sessions.SessionService;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -16,10 +14,9 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 /**
- * Created by apatters on 6/11/2017.
+ * Created by apatters on 6/13/2017.
  */
-@WebServlet(name = "PersonalDataServlet")
-public class PostsServlet extends HttpServlet {
+public class MessageServlet {
 
     private SessionService sessionService = new SessionService();
     private DatabaseService databaseService = new MockDatabaseService();
@@ -31,50 +28,37 @@ public class PostsServlet extends HttpServlet {
     }
 
 
-    protected void addPostAfterAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void addMessageAfterAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
         response.setContentType("text/plain");
 
         String poster = request.getParameter("poster");
         String content = request.getParameter("content");
 
-        databaseService.addPost(poster, new Post(poster, content));
+        databaseService.addMessage(poster, new Post(poster, content));
 
         PrintWriter out = response.getWriter();
         out.println("Success");
         out.flush();
 
-        System.out.println("Created a Post");
+        System.out.println("Created a Message");
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        sessionService.validateThenRespond(request, response, ()->addPostAfterAuth(request, response));
+        sessionService.validateThenRespond(request, response, ()->addMessageAfterAuth(request, response));
     }
 
 
 
 
 
-    protected void getPostsAfterAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void getMessagesAfterAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        String postType = request.getParameter("type");
-        ArrayList<Post> posts;
+        ArrayList<Post> messages;
 
-        switch(postType) {
-            case "followed":
-                String username = request.getParameter("username");
-                posts = databaseService.getFollowedPosts(username);
-                break;
-            case "own":
-                String poster = request.getParameter("poster");
-                posts = databaseService.getOwnPosts(poster);
-                break;
-            default:
-                String msg = String.format("Invalid post type requested: %s", postType);
-                System.out.println(msg);
-                throw new Error(msg);
-        }
+        String username = request.getParameter("username");
+        messages = databaseService.getFollowedPosts(username);
 
-        String JSON = JSONConvertible.toJSONList(posts);
+        String JSON = JSONConvertible.toJSONList(messages);
 
         response.setContentType("application/json; charset=UTF-8");
         PrintWriter out = response.getWriter();
@@ -86,19 +70,19 @@ public class PostsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("get posts");
 
-        sessionService.validateThenRespond(request, response, ()->getPostsAfterAuth(request, response));
+        sessionService.validateThenRespond(request, response, ()->getMessagesAfterAuth(request, response));
     }
 
 
 
 
 
-    protected void deletePostAfterAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void deleteMessageAfterAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String username = request.getParameter("username");
 
         int index = Integer.parseInt(request.getParameter("index"));
-        databaseService.deletePost(username, index);
+        databaseService.deleteMessage(username, index);
 
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
@@ -109,7 +93,7 @@ public class PostsServlet extends HttpServlet {
     }
 
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        sessionService.validateThenRespond(request, response, ()->deletePostAfterAuth(request, response));
+        sessionService.validateThenRespond(request, response, ()->deleteMessageAfterAuth(request, response));
     }
 
 
@@ -122,4 +106,3 @@ public class PostsServlet extends HttpServlet {
         System.out.println("Destroyed");
     }
 }
-

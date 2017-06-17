@@ -7,17 +7,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Enumeration;
-import java.util.ResourceBundle;
-import java.util.function.Function;
 
 /**
  * Created by apatters on 6/12/2017.
  */
 public class SessionService {
 
-    private DatabaseService databaseService = MockDatabaseService.getInstance();
+    private DatabaseService databaseService = new MockDatabaseService();
 
     public void connect(){
         databaseService.connect();
@@ -32,7 +28,7 @@ public class SessionService {
         // create session
 
         // return result
-        boolean check = databaseService.validateCredentials(username, password);
+        boolean check = databaseService.getPassword(username).equals(password);
 
         if(check){
             HttpSession session = request.getSession();
