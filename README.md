@@ -17,4 +17,10 @@ This will be an API for the Primitive Social Media Site project. This version of
   - [ ] post: create a new post
   - [ ] get: get posts
   - [ ] delete: delete a post
-  
+- [ ] Services
+  - [ ] DatabaseService
+    - [ ] Mock
+    - [ ] Mongodb
+- [ ] Tests
+  - [ ] Services
+  - [ ] Servlets
