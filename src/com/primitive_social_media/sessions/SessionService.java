@@ -2,6 +2,8 @@ package com.primitive_social_media.sessions;
 
 import com.primitive_social_media.database.DatabaseService;
 import com.primitive_social_media.database.MockDatabaseService;
+import com.primitive_social_media.exception.SessionNotValidException;
+import com.primitive_social_media.exception.UserNotExistsException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +26,7 @@ public class SessionService {
      * @param request
      * @return
      */
-    public boolean signIn(HttpServletRequest request){
+    public boolean signIn(HttpServletRequest request) throws UserNotExistsException {
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
@@ -37,17 +39,15 @@ public class SessionService {
         return check;
     }
 
-    /**
-     *
-     * @param request
-     * @return
-     */
-    public boolean validateSession(HttpServletRequest request){
+    public void assertSession(HttpServletRequest request) throws SessionNotValidException {
         String username = request.getParameter("username");
         HttpSession session = request.getSession();
         Object sessionUsername = session.getAttribute("username");
-        return !(sessionUsername==null)&&(sessionUsername.toString().equals(username));
+        if((sessionUsername==null)||(!sessionUsername.toString().equals(username))){
+            throw new SessionNotValidException();
+        }
     }
+
 
     /**
      *
@@ -58,49 +58,9 @@ public class SessionService {
         session.invalidate();
     }
 
+
+
     public void close(){
 
-    }
-
-    /**
-     *
-     */
-    public interface ValidationResultHandler{
-        void respond() throws IOException;
-    }
-    private void defaultValidationFailureHandler(HttpServletRequest request, HttpServletResponse response){
-        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-    };
-
-    /**
-     *
-     * @param request
-     * @param response
-     * @param successHandler
-     * @throws IOException
-     */
-    public void validateThenRespond(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    ValidationResultHandler successHandler) throws IOException {
-
-        validateThenRespond(request, response, successHandler, ()->defaultValidationFailureHandler(request, response));
-    }
-
-    /**
-     *
-     * @param request
-     * @param response
-     * @param validationSuccessHandler
-     * @param validationFailureHandler
-     * @throws IOException
-     */
-    public void validateThenRespond(HttpServletRequest request, HttpServletResponse response,
-                                    ValidationResultHandler validationSuccessHandler,
-                                    ValidationResultHandler validationFailureHandler) throws IOException{
-        if(validateSession(request)){
-            validationSuccessHandler.respond();
-        }else{
-            validationFailureHandler.respond();
-        }
     }
 }

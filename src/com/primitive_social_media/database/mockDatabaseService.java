@@ -3,13 +3,10 @@ package com.primitive_social_media.database;
 import com.primitive_social_media.PersonalData;
 import com.primitive_social_media.Post;
 import com.primitive_social_media.UserData;
-import javafx.geometry.Pos;
+import com.primitive_social_media.exception.InvalidDataException;
+import com.primitive_social_media.exception.UserNotExistsException;
 
-import java.lang.reflect.Array;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -33,32 +30,36 @@ public class MockDatabaseService extends DatabaseService{
 //    private HashMap<String, ArrayList<String>> followingMap = new HashMap<>();
 
     public void  connect(){
-//        String username;
-//        username = "Bob";
-//        addUser(username,
-//                new PersonalData(username, username + "'s town", "01/02/2000", username+"'s business", username+"'s picture"),
-//                 username+"'s password");
-//        addPost(username, new Post(username, username+"'s post 1"));
-//        addPost(username, new Post(username, username+"'s post 2"));
-//
-//        username = "Kim";
-//        addUser(username,
-//                new PersonalData(username, username + "'s town", "01/02/2000", username+"'s business", username+"'s picture"),
-//                username+"'s password");
-//        addPost(username, new Post(username, username+"'s post 1"));
-//        addPost(username, new Post(username, username+"'s post 2"));
-//
-//        username = "Raj";
-//        addUser(username,
-//                new PersonalData(username, username + "'s town", "01/02/2000", username+"'s business", username+"'s picture"),
-//                username+"'s password");
-//        addPost(username, new Post(username, username+"'s post 1"));
-//        addPost(username, new Post(username, username+"'s post 2"));
-//
-//        addFollower("Bob", "Raj");
-//        addFollower("Kim", "Raj");
-//
-//        addMessage("Kim", new Post("Raj", "Hello Kim"));
+        try{
+            String username;
+            username = "Bob";
+            addUser(username,
+                    new PersonalData(username, username + "'s town", "01/02/2000", username+"'s business", username+"'s picture"),
+                     username+"'s password");
+                addPost(username, new Post(username, username + "'s post 1"));
+                addPost(username, new Post(username, username + "'s post 2"));
+
+            username = "Kim";
+            addUser(username,
+                    new PersonalData(username, username + "'s town", "01/02/2000", username+"'s business", username+"'s picture"),
+                    username+"'s password");
+            addPost(username, new Post(username, username+"'s post 1"));
+            addPost(username, new Post(username, username+"'s post 2"));
+
+            username = "Raj";
+            addUser(username,
+                    new PersonalData(username, username + "'s town", "01/02/2000", username+"'s business", username+"'s picture"),
+                    username+"'s password");
+            addPost(username, new Post(username, username+"'s post 1"));
+            addPost(username, new Post(username, username+"'s post 2"));
+
+            addFollower("Bob", "Raj");
+            addFollower("Kim", "Raj");
+
+            addMessage("Kim", new Post("Raj", "Hello Kim"));
+        }catch(UserNotExistsException e){
+            System.out.println(e);
+        }
     }
 
     @Override
@@ -79,7 +80,15 @@ public class MockDatabaseService extends DatabaseService{
     public Boolean checkUser(String username){
         return userData.containsKey(username);
     }
-    public void deleteUser(String username){
+
+    public void assertUserExists(String username) throws UserNotExistsException {
+        if(!checkUser(username)){
+            throw new UserNotExistsException(username);
+        }
+    }
+
+    public void deleteUser(String username) throws UserNotExistsException {
+        assertUserExists(username);
         userData.remove(username);
         // consider how to update the follow maps of other users that include the deleted user
     }
@@ -89,7 +98,8 @@ public class MockDatabaseService extends DatabaseService{
      * @param username the user's username
      * @return the personal data
      */
-    public PersonalData findPersonalData(String username){
+    public PersonalData findPersonalData(String username) throws UserNotExistsException {
+        assertUserExists(username);
         String query = ("^"+username+"$");
         HashMap<String, PersonalData> matches =  findPersonalDataMultiple(query);
         if(!(matches.size()==1)){
@@ -120,7 +130,8 @@ public class MockDatabaseService extends DatabaseService{
      * @param username - user's username
      * @param personalData - personal data
      */
-    public void setPersonalData(String username, PersonalData personalData){
+    public void setPersonalData(String username, PersonalData personalData) throws UserNotExistsException {
+        assertUserExists(username);
         userData.get(username).personalData = personalData;
     }
 
@@ -130,7 +141,8 @@ public class MockDatabaseService extends DatabaseService{
      * @param username
      * @return password
      */
-    public String getPassword(String username){
+    public String getPassword(String username) throws UserNotExistsException {
+        assertUserExists(username);
         return userData.get(username).password;
     }
 
@@ -139,14 +151,16 @@ public class MockDatabaseService extends DatabaseService{
      * @param username
      * @param password - updated password
      */
-    public void setPassword(String username, String password){
+    public void setPassword(String username, String password) throws UserNotExistsException {
+        assertUserExists(username);
         userData.get(username).password = password;
     }
 
 
 
 
-    public ArrayList<Post> getOwnPosts(String username){
+    public ArrayList<Post> getOwnPosts(String username) throws UserNotExistsException {
+        assertUserExists(username);
         String query = ("^"+username+"$");
         ArrayList<Post> matches =  getOwnPostsMultiple(query);
         // consider checking if user is not found
@@ -165,7 +179,8 @@ public class MockDatabaseService extends DatabaseService{
         return matches;
     }
 
-    public ArrayList<Post> getFollowedPosts(String username){
+    public ArrayList<Post> getFollowedPosts(String username) throws UserNotExistsException {
+        assertUserExists(username);
         ArrayList<Post> followedPosts = new ArrayList<>();
         userData.get(username).following.forEach(name->{
             userData.get(name).ownPosts.forEach(post->followedPosts.add(post));
@@ -173,36 +188,54 @@ public class MockDatabaseService extends DatabaseService{
         return followedPosts;
     }
 
-    public void addPost(String username, Post post){
+    public void addPost(String username, Post post) throws UserNotExistsException {
+        assertUserExists(username);
         userData.get(username).ownPosts.add(post);
     }
 
-    public void deletePost(String username, int idx){
-        userData.get(username).ownPosts.remove(idx);
+    public void deletePost(String username, int idx) throws UserNotExistsException, InvalidDataException {
+        assertUserExists(username);
+        ArrayList<Post> posts = userData.get(username).ownPosts;
+        if(posts.size()>idx){
+            posts.remove(idx);
+        }else{
+            throw new InvalidDataException(String.format("Post of index %d does not exist", idx));
+        }
     }
 
 
 
 
 
-    public ArrayList<Post> getMessages(String username){
+    public ArrayList<Post> getMessages(String username) throws UserNotExistsException {
+        assertUserExists(username);
         return userData.get(username).messages;
     }
 
-    public void addMessage(String username, Post message){
+    public void addMessage(String username, Post message) throws UserNotExistsException {
+        assertUserExists(username);
         userData.get(username).messages.add(message);
     }
 
-    public void deleteMessage(String username, int idx){
+    public void deleteMessage(String username, int idx) throws UserNotExistsException, InvalidDataException {
+        assertUserExists(username);
         userData.get(username).messages.remove(idx);
+        ArrayList<Post> messages = userData.get(username).messages;
+        if(messages.size()>idx){
+            messages.remove(idx);
+        }else{
+            throw new InvalidDataException(String.format("Message of index %d does not exist", idx));
+        }
     }
 
 
-    public ArrayList<String> getFollowedBy(String username){
-        return userData.get(username).followedBy;
-    }
+//    public ArrayList<String> getFollowedBy(String username){
+//        return userData.get(username).followedBy;
+//    }
 
-    public void addFollower(String followeeUsername, String followerUsername){
+    public void addFollower(String followeeUsername, String followerUsername) throws UserNotExistsException {
+        assertUserExists(followeeUsername);
+        assertUserExists(followerUsername);
         ArrayList<String> followedBy = userData.get(followeeUsername).followedBy;
         if(!followedBy.contains(followerUsername)){
             followedBy.add(followerUsername);
@@ -210,7 +243,9 @@ public class MockDatabaseService extends DatabaseService{
         }
     }
 
-    public void deleteFollower(String followeeUsername, String followerUsername){
+    public void deleteFollower(String followeeUsername, String followerUsername) throws UserNotExistsException {
+        assertUserExists(followeeUsername);
+        assertUserExists(followerUsername);
         ArrayList<String> followedBy = userData.get(followeeUsername).followedBy;
         int idx = followedBy.indexOf(followerUsername);
         if(!(idx==-1)){
@@ -220,14 +255,18 @@ public class MockDatabaseService extends DatabaseService{
     }
 
 
-    protected void addFollowee(String followeeUsername, String followerUsername){
+    protected void addFollowee(String followeeUsername, String followerUsername) throws UserNotExistsException {
+        assertUserExists(followeeUsername);
+        assertUserExists(followerUsername);
         ArrayList<String> following = userData.get(followerUsername).following;
         if(!following.contains(followeeUsername)){
             following.add(followeeUsername);
         }
     }
 
-    protected void deleteFollowee(String followeeUsername, String followerUsername){
+    protected void deleteFollowee(String followeeUsername, String followerUsername) throws UserNotExistsException {
+        assertUserExists(followeeUsername);
+        assertUserExists(followerUsername);
         ArrayList<String> following = userData.get(followerUsername).followedBy;
         int idx = following.indexOf(followeeUsername);
         if(!(idx==-1)){

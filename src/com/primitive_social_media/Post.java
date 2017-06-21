@@ -17,21 +17,6 @@ public class Post extends JSONConvertible{
     public String content;
     public Date timestamp;
 
-//    public static String toJSON(ArrayList<Post> posts){
-//        String postsInner = "";
-//
-//        Iterator<Post> postItr = posts.iterator();
-//        while(postItr.hasNext()){
-//            Post currentPost = postItr.next();
-//            if(postItr.hasNext()){
-//                postsInner += String.format("%s, ", currentPost.toJSON());
-//            }else{
-//                postsInner += currentPost.toJSON();
-//            }
-//        }
-//
-//        return String.format("[%s]", postsInner);
-//    }
 
     public Post(String poster, String content, Date timestamp){
         this.poster=poster;
@@ -39,9 +24,11 @@ public class Post extends JSONConvertible{
         this.timestamp = timestamp;
     }
 
+
     public Post(String poster, String content){
         this(poster, content, new Date());
     }
+
 
     public Post(Post post){
         this.poster = post.poster;
@@ -54,6 +41,6 @@ public class Post extends JSONConvertible{
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
 
         String timestampStr = df.format(this.timestamp);
-        return String.format("{\"poster\":\"%s\", \"content\":\"%s\", \"timestamp\":%s}",poster, content, timestampStr);
+        return String.format("{\"poster\":\"%s\", \"content\":\"%s\", \"timestamp\":\"%s\"}",poster, content, timestampStr);
     }
 }

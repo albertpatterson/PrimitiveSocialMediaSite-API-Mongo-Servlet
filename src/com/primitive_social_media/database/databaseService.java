@@ -2,6 +2,8 @@ package com.primitive_social_media.database;
 
 import com.primitive_social_media.PersonalData;
 import com.primitive_social_media.Post;
+import com.primitive_social_media.exception.InvalidDataException;
+import com.primitive_social_media.exception.UserNotExistsException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,14 +22,14 @@ public abstract class DatabaseService {
 
     public abstract Boolean checkUser(String username);
 
-    public abstract void deleteUser(String username);
+    public abstract void deleteUser(String username) throws UserNotExistsException;
 
     /**
      * find the personal data for a single user
      * @param username the user's username
      * @return the personal data
      */
-    public abstract PersonalData findPersonalData(String username);
+    public abstract PersonalData findPersonalData(String username) throws UserNotExistsException;
 
     /**
      * find the personal data of multiple personalData
@@ -41,7 +43,7 @@ public abstract class DatabaseService {
      * @param username - user's username
      * @param personalData - personal data
      */
-    public abstract void setPersonalData(String username, PersonalData personalData);
+    public abstract void setPersonalData(String username, PersonalData personalData) throws UserNotExistsException;
 
 
     /**
@@ -49,45 +51,45 @@ public abstract class DatabaseService {
      * @param username
      * @return password
      */
-    public abstract String getPassword(String username);
+    public abstract String getPassword(String username) throws UserNotExistsException;
 
     /**
      * set the password of a user
      * @param username
      * @param password - updated password
      */
-    public abstract void setPassword(String username, String password);
+    public abstract void setPassword(String username, String password) throws UserNotExistsException;
 
 
 
 
-    public abstract ArrayList<Post> getOwnPosts(String username);
+    public abstract ArrayList<Post> getOwnPosts(String username) throws UserNotExistsException;
 
 
-    public abstract ArrayList<Post> getFollowedPosts(String username);
+    public abstract ArrayList<Post> getFollowedPosts(String username) throws UserNotExistsException;
 
-    public abstract void addPost(String username, Post post);
+    public abstract void addPost(String username, Post post) throws UserNotExistsException;
 
-    public abstract void deletePost(String username, int idx);
-
-
+    public abstract void deletePost(String username, int idx) throws UserNotExistsException, InvalidDataException;
 
 
 
-    public abstract ArrayList<Post> getMessages(String username);
-
-    public abstract void addMessage(String username, Post message);
-
-    public abstract void deleteMessage(String username, int idx);
-
-    public abstract ArrayList<String> getFollowedBy(String username);
-
-    public abstract void addFollower(String followeeUsername, String followerUsername);
-
-    public abstract void deleteFollower(String followeeUsername, String followerUsername);
 
 
-    protected abstract void addFollowee(String followeeUsername, String followerUsername);
+    public abstract ArrayList<Post> getMessages(String username) throws UserNotExistsException;
 
-    protected abstract void deleteFollowee(String followeeUsername, String followerUsername);
+    public abstract void addMessage(String username, Post message) throws UserNotExistsException;
+
+    public abstract void deleteMessage(String username, int idx) throws UserNotExistsException, InvalidDataException;
+
+//    public abstract ArrayList<String> getFollowedBy(String username);
+
+    public abstract void addFollower(String followeeUsername, String followerUsername) throws UserNotExistsException;
+
+    public abstract void deleteFollower(String followeeUsername, String followerUsername) throws UserNotExistsException;
+
+
+    protected abstract void addFollowee(String followeeUsername, String followerUsername) throws UserNotExistsException;
+
+    protected abstract void deleteFollowee(String followeeUsername, String followerUsername) throws UserNotExistsException;
 }

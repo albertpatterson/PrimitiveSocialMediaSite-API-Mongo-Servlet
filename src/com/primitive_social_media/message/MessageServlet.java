@@ -2,6 +2,8 @@ package com.primitive_social_media.message;
 
 import com.primitive_social_media.JSONConvertible;
 import com.primitive_social_media.Post;
+import com.primitive_social_media.exception.ServiceException;
+import com.primitive_social_media.exception.UserNotExistsException;
 import com.primitive_social_media.database.DatabaseService;
 import com.primitive_social_media.database.MockDatabaseService;
 import com.primitive_social_media.sessions.SessionService;
@@ -28,72 +30,63 @@ public class MessageServlet {
     }
 
 
-    protected void addMessageAfterAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/plain");
-
-        String poster = request.getParameter("poster");
-        String content = request.getParameter("content");
-
-        databaseService.addMessage(poster, new Post(poster, content));
-
-        response.setStatus(HttpServletResponse.SC_CREATED);
-
-        System.out.println("Created a Message");
-    }
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        sessionService.validateThenRespond(request, response, ()->addMessageAfterAuth(request, response));
+
+        try{
+            sessionService.assertSession(request);
+
+            String poster = request.getParameter("poster");
+            String content = request.getParameter("content");
+
+            databaseService.addMessage(poster, new Post(poster, content));
+
+            response.setStatus(HttpServletResponse.SC_CREATED);
+            System.out.println("Created a Message");
+
+        }catch(ServiceException serviceException){
+            serviceException.respond(response);
+        }
     }
 
-
-
-
-
-    protected void getMessagesAfterAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        ArrayList<Post> messages;
-
-        String username = request.getParameter("username");
-        messages = databaseService.getFollowedPosts(username);
-
-        String JSON = JSONConvertible.toJSONList(messages);
-
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json; charset=UTF-8");
-        PrintWriter out = response.getWriter();
-        out.print(JSON);
-        out.flush();
-        System.out.println("Sent Posts");
-    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("get posts");
+        try {
+            sessionService.assertSession(request);
 
-        sessionService.validateThenRespond(request, response, ()->getMessagesAfterAuth(request, response));
+            String username = request.getParameter("username");
+
+            ArrayList<Post> messages = databaseService.getFollowedPosts(username);
+            String JSON = JSONConvertible.toJSONList(messages);
+
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json; charset=UTF-8");
+            PrintWriter out = response.getWriter();
+            out.print(JSON);
+
+            System.out.println("Sent Posts");
+        } catch (ServiceException e) {
+            e.respond(response);
+        }
     }
 
-
-
-
-
-    protected void deleteMessageAfterAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        String username = request.getParameter("username");
-
-        int index = Integer.parseInt(request.getParameter("index"));
-        databaseService.deleteMessage(username, index);
-
-        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-
-        System.out.println("Deleted a Post");
-    }
 
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        sessionService.validateThenRespond(request, response, ()->deleteMessageAfterAuth(request, response));
+        try{
+            sessionService.assertSession(request);
+
+            String username = request.getParameter("username");
+            int index = Integer.parseInt(request.getParameter("index"));
+
+            databaseService.deleteMessage(username, index);
+
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+
+            System.out.println("Deleted a Post");
+
+        } catch (ServiceException e) {
+            e.respond(response);
+        }
     }
-
-
-
 
 
     // close connection to database on destroy

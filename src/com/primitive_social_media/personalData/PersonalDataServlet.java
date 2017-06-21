@@ -3,6 +3,8 @@ package com.primitive_social_media.personalData;
 import com.primitive_social_media.PersonalData;
 import com.primitive_social_media.database.DatabaseService;
 import com.primitive_social_media.database.MockDatabaseService;
+import com.primitive_social_media.exception.InvalidDataException;
+import com.primitive_social_media.exception.ServiceException;
 import com.primitive_social_media.sessions.SessionService;
 
 import javax.print.attribute.PrintRequestAttribute;
@@ -11,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.ws.Service;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -24,9 +27,11 @@ public class PersonalDataServlet extends HttpServlet {
     private DatabaseService databaseService = new MockDatabaseService();
     private SessionService sessionService = new SessionService();
 
+
     public void init(){
         System.out.println("Initialized UserServlet");
     }
+
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String username = request.getParameter("username");
@@ -49,31 +54,30 @@ public class PersonalDataServlet extends HttpServlet {
     }
 
 
-
-
-
-    protected void getPersonalDataAfterAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String username = request.getParameter("username");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         try {
+            sessionService.assertSession(request);
+
+            String username = request.getParameter("username");
             PersonalData data = databaseService.findPersonalData(username);
+
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json");
             PrintWriter out = response.getWriter();
             out.print(data.toJSON());
-        } catch(Error e){
-            System.out.println(e.getMessage());
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+        }catch(ServiceException serviceException){
+            serviceException.respond(response);
         }
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        sessionService.validateThenRespond(request, response, ()->getPersonalDataAfterAuth(request, response));
-    }
 
-    protected void putPersonalDataAfterAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
+            sessionService.assertSession(request);
+
             String username = request.getParameter("username");
             String location = request.getParameter("location");
             String DOBString = request.getParameter("DOB");
@@ -82,35 +86,40 @@ public class PersonalDataServlet extends HttpServlet {
 
             PersonalData personalData = databaseService.findPersonalData(username);
             if (location != null) personalData.location = location;
-            if (DOBString != null) personalData.setDOBString(DOBString);
             if (business != null) business = personalData.business;
             if (picture != null) picture = personalData.picture;
+            try {
+                if (DOBString != null) personalData.setDOBString(DOBString);
+            }catch(ParseException parseException){
+                String msg = String.format("Invalid data: \"%s\" format must be DD/MM/YYY", DOBString);
+                throw new InvalidDataException(msg);
+            }
 
             databaseService.setPersonalData(username, personalData);
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);
 
             System.out.println("updated user " + username);
-        } catch (ParseException e) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            e.printStackTrace();
+        }catch(ServiceException serviceException){
+            serviceException.respond(response);
         }
     }
 
-    protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        sessionService.validateThenRespond(request, response, ()->putPersonalDataAfterAuth(request, response));
-    }
 
-
-    protected void deleteUserAfterAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String username = request.getParameter("username");
-
-        databaseService.deleteUser(username);
-        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-
-        System.out.println("Deleted user " + username);
-    };
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        sessionService.validateThenRespond(request, response, ()->deleteUserAfterAuth(request, response));
+
+        try{
+            sessionService.assertSession(request);
+
+            String username = request.getParameter("username");
+
+            databaseService.deleteUser(username);
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+
+            System.out.println("Deleted user " + username);
+
+        }catch(ServiceException serviceException){
+            serviceException.respond(response);
+        }
     }
 
 

@@ -5,6 +5,8 @@ import com.primitive_social_media.Post;
 import com.primitive_social_media.UserData;
 import com.primitive_social_media.database.*;
 import com.primitive_social_media.database.MockDatabaseService;
+import com.primitive_social_media.exception.InvalidDataException;
+import com.primitive_social_media.exception.UserNotExistsException;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -14,7 +16,6 @@ import java.util.HashMap;
 import static org.junit.Assert.*;
 import static org.junit.Assert.assertEquals;
 
-
 /**
  * Created by apatters on 6/19/2017.
  */
@@ -23,15 +24,9 @@ public class MockDatabaseServiceTest extends TestCase{
     private com.primitive_social_media.database.MockDatabaseService mockDatabaseService = new MockDatabaseService();
 
 
-    public void setUp(){
-        mockDatabaseService.connect();
-    }
-
-    public void tearDown(){
-        mockDatabaseService.close();
-    }
-
     public void testAddUser(){
+
+
         assertEquals(mockDatabaseService.findPersonalDataMultiple(".*").size(), 0);
 
         UserData newUser = addNewUser();;
@@ -42,7 +37,8 @@ public class MockDatabaseServiceTest extends TestCase{
         assertEquals(updatedUsers.get(newUser.personalData.name).name, newUser.personalData.name);
     }
 
-    public void testDeleteUser(){
+
+    public void testDeleteUser() throws UserNotExistsException {
 
         UserData newUser = addNewUser();
         String username = newUser.personalData.name;
@@ -52,13 +48,15 @@ public class MockDatabaseServiceTest extends TestCase{
         assertEquals(mockDatabaseService.userData.size(), 0);
     }
 
-    public void testFindUser(){
+
+    public void testFindUser() throws UserNotExistsException {
         UserData newUser = addNewUser();
         String username = newUser.personalData.name;
 
         PersonalData personalData = mockDatabaseService.findPersonalData(username);
         assertEquals(personalData.name, username);
     }
+
 
     public void testFindUserMultiple(){
         addNewUser("Anne");
@@ -69,7 +67,8 @@ public class MockDatabaseServiceTest extends TestCase{
         assertEquals(personalData.size(), 2);
     }
 
-    public void testSetPersonalData(){
+
+    public void testSetPersonalData() throws UserNotExistsException {
         UserData newUser = addNewUser();
         String username = newUser.personalData.name;
         String location = newUser.personalData.location;
@@ -81,7 +80,8 @@ public class MockDatabaseServiceTest extends TestCase{
         assertEquals(mockDatabaseService.findPersonalData(username).location, newPersonalData.location);
     }
 
-    public void testGetPassword(){
+
+    public void testGetPassword() throws UserNotExistsException {
         UserData newUser = addNewUser();
         String username = newUser.personalData.name;
         String password = newUser.password;
@@ -89,7 +89,7 @@ public class MockDatabaseServiceTest extends TestCase{
     }
 
 
-    public void testSetPassword(){
+    public void testSetPassword() throws UserNotExistsException {
         UserData newUser = addNewUser();
         String username = newUser.personalData.name;
         String newPassword = "newPassword";
@@ -99,7 +99,7 @@ public class MockDatabaseServiceTest extends TestCase{
     }
 
 
-    public void testAddAndGetPost(){
+    public void testAddAndGetPost() throws UserNotExistsException {
         UserData newUser = addNewUser();
         String username = newUser.personalData.name;
         assertEquals(mockDatabaseService.getOwnPosts(username).size(), 0);
@@ -112,7 +112,8 @@ public class MockDatabaseServiceTest extends TestCase{
         assertEquals(ownPosts.get(0).content, newPost.content);
     }
 
-    public void testDeletetPost(){
+
+    public void testDeletetPost() throws UserNotExistsException, InvalidDataException {
         UserData newUser = addNewUser();
         String username = newUser.personalData.name;
 
@@ -123,7 +124,8 @@ public class MockDatabaseServiceTest extends TestCase{
         assertEquals(mockDatabaseService.getOwnPosts(username).size(), 0);
     }
 
-    public void testFollowUserAndGetFollowedPosts(){
+
+    public void testFollowUnfollowUserAndGetFollowedPosts() throws UserNotExistsException {
         UserData anne = addNewUser("Anne");
         String anneName = anne.personalData.name;
 
@@ -138,8 +140,8 @@ public class MockDatabaseServiceTest extends TestCase{
         assertEquals(bill.following.size(), 0);
 
         mockDatabaseService.addFollower(anneName, billName);
-        assertEquals(mockDatabaseService.getFollowedBy(anneName).size(), 1);
-        assertEquals(mockDatabaseService.getFollowedBy(billName).size(), 0);
+//        assertEquals(mockDatabaseService.getFollowedBy(anneName).size(), 1);
+//        assertEquals(mockDatabaseService.getFollowedBy(billName).size(), 0);
 
 
         Post billPost = new Post(billName, "bills post");
@@ -151,17 +153,34 @@ public class MockDatabaseServiceTest extends TestCase{
         assertEquals(mockDatabaseService.getFollowedPosts(anneName).size(), 0);
         assertEquals(mockDatabaseService.getFollowedPosts(billName).size(), 1);
 
+
+        mockDatabaseService.deleteFollower(anneName, billName);
+        assertEquals(mockDatabaseService.getFollowedPosts(billName).size(), 0);
     }
 
 
+    public void testAddgetDeleteMessage() throws UserNotExistsException, InvalidDataException {
+        UserData newUser = addNewUser();
+        String username = newUser.personalData.name;
 
+        assertEquals(mockDatabaseService.getMessages(username).size(), 0);
 
+        String otherUsername = "other";
+        Post othersMessage = new Post(otherUsername, username+ "'s post");
+        mockDatabaseService.addMessage(username, othersMessage);
 
+        assertEquals(mockDatabaseService.getMessages(username).size(), 1);
+
+        mockDatabaseService.deleteMessage(username,0);
+
+        assertEquals(mockDatabaseService.getMessages(username).size(), 0);
+    }
 
 
     public UserData addNewUser(){
         return addNewUser("Anne");
     }
+
 
     public UserData addNewUser(String username){
         PersonalData personalData = new PersonalData(username, "b", "01/02/2000", "d", "e");

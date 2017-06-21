@@ -1,12 +1,13 @@
 package com.primitive_social_media.sessions;
 
+import com.primitive_social_media.exception.ServiceException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * Created by apatters on 6/12/2017.
@@ -28,28 +29,21 @@ public class SessionServlet extends HttpServlet {
      * @throws ServletException
      * @throws IOException
      */
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        if(sessionService.signIn(request)){
-            response.setStatus(HttpServletResponse.SC_CREATED);
-        }else{
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        try {
+
+            if (sessionService.signIn(request)) {
+                response.setStatus(HttpServletResponse.SC_CREATED);
+            } else {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            }
+
+        }catch(ServiceException serviceException){
+            serviceException.respond(response);
         }
     }
 
-
-
-
-
-    /**
-     *
-     * @param request
-     * @param response
-     * @throws IOException
-     */
-    protected void getSessionAfterAuth(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setStatus(HttpServletResponse.SC_OK);
-    };
 
     /**
      *
@@ -58,30 +52,17 @@ public class SessionServlet extends HttpServlet {
      * @throws ServletException
      * @throws IOException
      */
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        System.out.println("here");
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        try{
+            sessionService.assertSession(request);
 
-        sessionService.validateThenRespond(request, response, ()->getSessionAfterAuth(request, response));
+            response.setStatus(HttpServletResponse.SC_OK);
+
+        }catch(ServiceException serviceException){
+            serviceException.respond(response);
+        }
     }
 
-
-
-
-
-
-    /**
-     *
-     * @param request
-     * @param response
-     * @throws IOException
-     */
-    protected void deleteSession(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        sessionService.deleteSession(request);
-
-        response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-
-        System.out.println("Deleted session");
-    };
 
     /**
      *
@@ -91,7 +72,18 @@ public class SessionServlet extends HttpServlet {
      * @throws IOException
      */
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        sessionService.validateThenRespond(request, response, ()->deleteSession(request, response));
+        try{
+            sessionService.assertSession(request);
+
+            sessionService.deleteSession(request);
+
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+
+            System.out.println("Deleted session");
+
+        }catch(ServiceException serviceException){
+            serviceException.respond(response);
+        }
     }
 
     public void destroy(){
