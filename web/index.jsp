@@ -27,12 +27,12 @@
       signIn(getPosts);
 
       function signIn(callback){
-        $.post('/sessions', {username: 'Cam', password: 'PW1'}, callback);
+        $.post('/sessions', {username: "Bob", password: "Bob's password"}, callback);
       }
 
 
       function getPosts(){
-        $.get('/posts', {username: "Cam", poster: "Cam", type:"own"}, updatePosts);
+        $.get('/posts', {username: "Bob", poster: "Bob", type:"own"}, updatePosts);
       }
 
       function updatePosts(posts){
@@ -50,7 +50,7 @@
       }
 
       function addPost() {
-        var poster = "Cam";//document.getElementById("poster").value;
+        var poster = document.getElementById("poster").value;
         var content = document.getElementById("content").value;
 
         $.post('/posts', {username: poster, poster, content}, function () {
@@ -61,7 +61,7 @@
       function deletePost(){
         var index = $("#index").val();
         $.ajax({
-          url: '/posts' + '?' + $.param({index, username: "Cam"}),
+          url: '/posts' + '?' + $.param({index, username: "Bob"}),
           method: 'DELETE',
           success: getPosts
         });

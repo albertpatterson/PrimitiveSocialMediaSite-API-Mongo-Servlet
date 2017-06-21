@@ -15,7 +15,7 @@
 
     <servlet>
         <servlet-name>users</servlet-name>
-        <servlet-class>com.primitive_social_media.users.UsersServlet</servlet-class>
+        <servlet-class>com.primitive_social_media.personalData.PersonalDataServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
