@@ -1,12 +1,13 @@
-package com.primitive_social_media.posts;
+package com.primitive_social_media.post;
 
 import com.primitive_social_media.JSONConvertible;
 import com.primitive_social_media.Post;
 import com.primitive_social_media.database.DatabaseService;
 import com.primitive_social_media.database.MockDatabaseService;
 import com.primitive_social_media.exception.InvalidDataException;
+import com.primitive_social_media.exception.NullParameterException;
 import com.primitive_social_media.exception.ServiceException;
-import com.primitive_social_media.sessions.SessionService;
+import com.primitive_social_media.session.SessionService;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,7 +22,7 @@ import java.util.ArrayList;
  * Created by apatters on 6/11/2017.
  */
 @WebServlet(name = "PersonalDataServlet")
-public class PostsServlet extends HttpServlet {
+public class PostServlet extends HttpServlet {
 
     private SessionService sessionService = new SessionService();
     private DatabaseService databaseService = new MockDatabaseService();
@@ -37,8 +38,8 @@ public class PostsServlet extends HttpServlet {
         try{
             sessionService.assertSession(request);
 
-            String poster = request.getParameter("poster");
-            String content = request.getParameter("content");
+            String poster = NullParameterException.assertParameter(request,"poster");
+            String content = NullParameterException.assertParameter(request,"content");
 
             databaseService.addPost(poster, new Post(poster, content));
 
@@ -57,7 +58,7 @@ public class PostsServlet extends HttpServlet {
         try{
             sessionService.assertSession(request);
 
-            String postType = request.getParameter("type");
+            String postType = NullParameterException.assertParameter(request,"type");
             ArrayList<Post> posts;
 
             switch(postType) {
@@ -94,14 +95,20 @@ public class PostsServlet extends HttpServlet {
         try{
             sessionService.assertSession(request);
 
-            String username = request.getParameter("username");
-            int index = Integer.parseInt(request.getParameter("index"));
+            String username = NullParameterException.assertParameter(request,"username");
+            String indexStr = NullParameterException.assertParameter(request,"index");
+            try {
+                int index = Integer.parseInt(indexStr);
 
-            databaseService.deletePost(username, index);
+                databaseService.deletePost(username, index);
 
-            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
 
-            System.out.println("Deleted a Post");
+                System.out.println("Deleted a Post");
+            }catch(NumberFormatException numberFormatException){
+                String msg = String.format("invalid index \"%s\"", indexStr);
+                throw new InvalidDataException(msg);
+            }
 
         }catch(ServiceException serviceException){
             serviceException.respond(response);

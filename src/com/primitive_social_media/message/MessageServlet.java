@@ -2,13 +2,15 @@ package com.primitive_social_media.message;
 
 import com.primitive_social_media.JSONConvertible;
 import com.primitive_social_media.Post;
+import com.primitive_social_media.exception.InvalidDataException;
+import com.primitive_social_media.exception.NullParameterException;
 import com.primitive_social_media.exception.ServiceException;
-import com.primitive_social_media.exception.UserNotExistsException;
 import com.primitive_social_media.database.DatabaseService;
 import com.primitive_social_media.database.MockDatabaseService;
-import com.primitive_social_media.sessions.SessionService;
+import com.primitive_social_media.session.SessionService;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -18,7 +20,7 @@ import java.util.ArrayList;
 /**
  * Created by apatters on 6/13/2017.
  */
-public class MessageServlet {
+public class MessageServlet extends HttpServlet {
 
     private SessionService sessionService = new SessionService();
     private DatabaseService databaseService = new MockDatabaseService();
@@ -35,8 +37,9 @@ public class MessageServlet {
         try{
             sessionService.assertSession(request);
 
-            String poster = request.getParameter("poster");
-            String content = request.getParameter("content");
+
+            String poster = NullParameterException.assertParameter(request, "poster");
+            String content = NullParameterException.assertParameter(request, "content");
 
             databaseService.addMessage(poster, new Post(poster, content));
 
@@ -53,7 +56,7 @@ public class MessageServlet {
         try {
             sessionService.assertSession(request);
 
-            String username = request.getParameter("username");
+            String username = NullParameterException.assertParameter(request,"username");
 
             ArrayList<Post> messages = databaseService.getFollowedPosts(username);
             String JSON = JSONConvertible.toJSONList(messages);
@@ -74,14 +77,20 @@ public class MessageServlet {
         try{
             sessionService.assertSession(request);
 
-            String username = request.getParameter("username");
-            int index = Integer.parseInt(request.getParameter("index"));
+            String username = NullParameterException.assertParameter(request,"username");
+            String indexStr = NullParameterException.assertParameter(request,"index");
+            try {
+                int index = Integer.parseInt(indexStr);
 
-            databaseService.deleteMessage(username, index);
+                databaseService.deleteMessage(username, index);
 
-            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
 
-            System.out.println("Deleted a Post");
+                System.out.println("Deleted a Post");
+            }catch(NumberFormatException numberFormatException){
+                String msg = String.format("invalid index \"%s\"", indexStr);
+                throw new InvalidDataException(msg);
+            }
 
         } catch (ServiceException e) {
             e.respond(response);

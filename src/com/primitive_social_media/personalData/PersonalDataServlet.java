@@ -4,16 +4,15 @@ import com.primitive_social_media.PersonalData;
 import com.primitive_social_media.database.DatabaseService;
 import com.primitive_social_media.database.MockDatabaseService;
 import com.primitive_social_media.exception.InvalidDataException;
+import com.primitive_social_media.exception.NullParameterException;
 import com.primitive_social_media.exception.ServiceException;
-import com.primitive_social_media.sessions.SessionService;
+import com.primitive_social_media.session.SessionService;
 
-import javax.print.attribute.PrintRequestAttribute;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.Service;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
@@ -34,22 +33,24 @@ public class PersonalDataServlet extends HttpServlet {
 
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        String location = request.getParameter("location");
-        String DOBString = request.getParameter("DOB");
-        String business = request.getParameter("business");
-        String picture = request.getParameter("picture");
+        try {
+            String username = NullParameterException.assertParameter(request, "username");
+            String password = NullParameterException.assertParameter(request, "password");
+            String location = NullParameterException.assertParameter(request, "location");
+            String DOBString = NullParameterException.assertParameter(request,"DOB");
+            String business = NullParameterException.assertParameter(request, "business");
+            String picture = NullParameterException.assertParameter(request, "picture");
 
-        if(databaseService.checkUser(username)){
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-            PrintWriter out = response.getWriter();
-            String msg = String.format("Username \"%s\" already in use.", username);
-            out.print(msg);
-        }else {
-            PersonalData userData = new PersonalData(username, location, DOBString, business, picture);
-            databaseService.addUser(username, userData, password);
-            response.setStatus(HttpServletResponse.SC_CREATED);
+            if (databaseService.checkUser(username)) {
+                String msg = String.format("Username \"%s\" already in use.", username);
+                throw new InvalidDataException(msg);
+            } else {
+                PersonalData userData = new PersonalData(username, location, DOBString, business, picture);
+                databaseService.addUser(username, userData, password);
+                response.setStatus(HttpServletResponse.SC_CREATED);
+            }
+        }catch(ServiceException serviceException){
+            serviceException.respond(response);
         }
     }
 
@@ -59,7 +60,7 @@ public class PersonalDataServlet extends HttpServlet {
         try {
             sessionService.assertSession(request);
 
-            String username = request.getParameter("username");
+            String username = NullParameterException.assertParameter(request,"username");
             PersonalData data = databaseService.findPersonalData(username);
 
             response.setStatus(HttpServletResponse.SC_OK);
@@ -78,7 +79,7 @@ public class PersonalDataServlet extends HttpServlet {
         try {
             sessionService.assertSession(request);
 
-            String username = request.getParameter("username");
+            String username = NullParameterException.assertParameter(request,"username");
             String location = request.getParameter("location");
             String DOBString = request.getParameter("DOB");
             String business = request.getParameter("business");
@@ -110,7 +111,7 @@ public class PersonalDataServlet extends HttpServlet {
         try{
             sessionService.assertSession(request);
 
-            String username = request.getParameter("username");
+            String username = NullParameterException.assertParameter(request,"username");
 
             databaseService.deleteUser(username);
             response.setStatus(HttpServletResponse.SC_NO_CONTENT);

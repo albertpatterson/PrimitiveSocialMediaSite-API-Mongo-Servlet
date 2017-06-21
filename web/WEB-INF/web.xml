@@ -5,32 +5,41 @@
          version="3.1">
 
     <servlet>
-        <servlet-name>posts</servlet-name>
-        <servlet-class>com.primitive_social_media.posts.PostsServlet</servlet-class>
+        <servlet-name>session</servlet-name>
+        <servlet-class>com.primitive_social_media.session.SessionServlet</servlet-class>
     </servlet>
+
     <servlet-mapping>
-        <servlet-name>posts</servlet-name>
-        <url-pattern>/posts</url-pattern>
+        <servlet-name>session</servlet-name>
+        <url-pattern>/session</url-pattern>
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>users</servlet-name>
+        <servlet-name>personalData</servlet-name>
         <servlet-class>com.primitive_social_media.personalData.PersonalDataServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>users</servlet-name>
-        <url-pattern>/users</url-pattern>
+        <servlet-name>personalData</servlet-name>
+        <url-pattern>/personalData</url-pattern>
     </servlet-mapping>
-
 
     <servlet>
-        <servlet-name>sessions</servlet-name>
-        <servlet-class>com.primitive_social_media.sessions.SessionServlet</servlet-class>
+        <servlet-name>post</servlet-name>
+        <servlet-class>com.primitive_social_media.post.PostServlet</servlet-class>
     </servlet>
-
     <servlet-mapping>
-        <servlet-name>sessions</servlet-name>
-        <url-pattern>/sessions</url-pattern>
+        <servlet-name>post</servlet-name>
+        <url-pattern>/post</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>message</servlet-name>
+        <servlet-class>com.primitive_social_media.message.MessageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>message</servlet-name>
+        <url-pattern>/message</url-pattern>
+    </servlet-mapping>
+
 </web-app>

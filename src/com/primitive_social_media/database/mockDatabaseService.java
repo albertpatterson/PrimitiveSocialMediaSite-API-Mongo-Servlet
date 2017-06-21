@@ -20,7 +20,7 @@ public class MockDatabaseService extends DatabaseService{
 //    private HashMap<String, PersonalData> userData.personalData = new HashMap<>();
 //    // passwords of each personalData
 //    private HashMap<String, String> passwordMap = new HashMap<>();
-//    // own posts of personalData
+//    // own post of personalData
 //    private HashMap<String, ArrayList<Post>> ownPostsMap = new HashMap<>();
 //    // messages sent to each user
 //    private HashMap<String, ArrayList<Post>> messagesMap = new HashMap<>();

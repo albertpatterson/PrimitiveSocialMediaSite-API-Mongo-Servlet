@@ -1,4 +1,4 @@
-package com.primitive_social_media.sessions;
+package com.primitive_social_media.session;
 
 import com.primitive_social_media.exception.ServiceException;
 
