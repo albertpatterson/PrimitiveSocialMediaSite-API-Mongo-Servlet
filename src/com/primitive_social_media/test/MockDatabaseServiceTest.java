@@ -159,14 +159,14 @@ public class MockDatabaseServiceTest extends TestCase{
     }
 
 
-    public void testAddgetDeleteMessage() throws UserNotExistsException, InvalidDataException {
+    public void testAddGetDeleteMessage() throws UserNotExistsException, InvalidDataException {
         UserData newUser = addNewUser();
         String username = newUser.personalData.name;
 
         assertEquals(mockDatabaseService.getMessages(username).size(), 0);
 
         String otherUsername = "other";
-        Post othersMessage = new Post(otherUsername, username+ "'s post");
+        Post othersMessage = new Post(otherUsername, otherUsername+ "'s message");
         mockDatabaseService.addMessage(username, othersMessage);
 
         assertEquals(mockDatabaseService.getMessages(username).size(), 1);

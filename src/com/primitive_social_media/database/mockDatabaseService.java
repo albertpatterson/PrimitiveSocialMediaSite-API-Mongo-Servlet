@@ -219,7 +219,6 @@ public class MockDatabaseService extends DatabaseService{
 
     public void deleteMessage(String username, int idx) throws UserNotExistsException, InvalidDataException {
         assertUserExists(username);
-        userData.get(username).messages.remove(idx);
         ArrayList<Post> messages = userData.get(username).messages;
         if(messages.size()>idx){
             messages.remove(idx);

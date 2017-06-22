@@ -22,6 +22,6 @@ public abstract class JSONConvertible {
             }
         }
 
-        return String.format("[%s]", innerJSON);
+        return String.format("{\"data\": [%s]}", innerJSON);
     }
 }

@@ -35,8 +35,8 @@
         $.get('/post', {username: "Bob", poster: "Bob", type:"own"}, updatePosts);
       }
 
-      function updatePosts(posts){
-//        var post = JSON.parse(e.target.response);
+      function updatePosts(data){
+        var posts = data.data;
         var str = "";
         var idx = 0;
         for(let post of posts){
