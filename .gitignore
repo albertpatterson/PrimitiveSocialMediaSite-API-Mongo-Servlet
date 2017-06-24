@@ -25,3 +25,6 @@ hs_err_pid*
 .idea/
 PrimitiveSocialMediaSite-API-Mongo-Servlet.iml
 out/
+
+# node_modules
+web/node_modules

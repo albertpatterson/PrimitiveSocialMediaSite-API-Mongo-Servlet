@@ -1,0 +1,35 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="ad col-sm-6" id="ad1">
+            Add 1
+        </div>
+        <div class="ad col-sm-6" id="ad2">
+            Add 2
+        </div>
+    </div>
+    <br>
+    <div class="row" id="navigation">
+        <div id="searchForm" class="col-sm-4">
+            <!--<form action="member/search" method="get">-->
+            <div class="fullwidth">
+                <input id="searchField" type="text" [(ngModel)]="searchPattern">
+                <button id="searchButton" type="submit" class="btn btn-success" (click)="search()">Search</button>
+            </div>
+            <!--</form>-->
+        </div>
+        <div class="col-sm-8">
+            <div class="btn-group fullwidth" role="group">
+                <a id="homeButton" class="btn btn-primary navButton" routerLink="./home" routerLinkActive="active">home</a>
+                <a id="messagesButton" class="btn btn-primary navButton" routerLink="./messages" routerLinkActive="active">
+                    <span id="messageCount" class="badge">{{messageCount}}</span>     messages    
+                </a>
+                <a id="premiumButton" class="btn btn-primary navButton" routerLink="./premium" routerLinkActive="active">premium</a>
+                <button id="signOutButton" class="btn btn-primary navButton" (click)="signout()">signout</button>
+            </div>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <router-outlet></router-outlet>
+    </div>
+</div>
