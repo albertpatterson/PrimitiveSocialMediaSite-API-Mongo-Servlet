@@ -1,7 +1,7 @@
 {
-  "name": "primitive-social-media-front-angular",
+  "name": "angular-quickstart",
   "version": "1.0.0",
-  "description": "A front end for the Primitive Social Media project, created using Angular",
+  "description": "QuickStart package.json from the documentation, supplemented with testing support",
   "scripts": {
   },
   "keywords": [],
