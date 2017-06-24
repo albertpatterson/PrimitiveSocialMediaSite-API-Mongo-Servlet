@@ -24,3 +24,20 @@ This will be an API for the Primitive Social Media Site project. This version of
 - [ ] Tests
   - [ ] Services
   - [ ] Servlets
+
+## Prerequisits
+* Java
+* Application server (Tomcat)
+* npm
+
+Installation
+```bash
+# Clone this repository
+$ git clone https://github.com/albertpatterson/PrimitiveSocialMediaSite-API-Mongo-Servlet.git
+
+# Go into the "web" repository
+$ cd PrimitiveSocialMediaSite-API-Mongo-Servlet/web
+
+# Install dependencies
+$ npm install
+```
