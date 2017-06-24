@@ -27,7 +27,7 @@ This will be an API for the Primitive Social Media Site project. This version of
 
 ## Prerequisits
 * Java
-* Application server (Tomcat)
+* Web server (Tomcat)
 * npm
 
 Installation
