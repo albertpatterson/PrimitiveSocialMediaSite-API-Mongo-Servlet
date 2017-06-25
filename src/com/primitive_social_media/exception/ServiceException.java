@@ -15,10 +15,16 @@ public abstract class ServiceException extends Exception {
     public void respond(HttpServletResponse response) throws IOException {
         response.setStatus(responseStatus);
 
-        response.setContentType("text/plain");
+//        response.setContentType("text/plain");
+        response.setContentType("application/json");
         PrintWriter out = response.getWriter();
         String msg = getMessage();
-        out.print(msg);
+        out.print("{" +
+                "\"message\": \"" + msg + "\"," +
+                "\"status\": " + responseStatus +
+                "}");
+        out.flush();
+
         System.out.println(msg);
     }
 

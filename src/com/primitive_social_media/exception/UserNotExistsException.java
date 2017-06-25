@@ -16,6 +16,6 @@ public class UserNotExistsException extends ServiceException {
     }
 
     public String getMessage(){
-        return String.format("User \"%s\" does not exist.", username);
+        return String.format("User \\\"%s\\\" does not exist.", username);
     }
 }

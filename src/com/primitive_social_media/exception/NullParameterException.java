@@ -9,7 +9,7 @@ public class NullParameterException extends ServiceException{
 
     public static String assertParameter(HttpServletRequest request, String parameter) throws NullParameterException {
         String value = request.getParameter(parameter);
-        if(value.equals(null)){
+        if(value == null ){
             throw new NullParameterException(parameter);
         }
         return value;

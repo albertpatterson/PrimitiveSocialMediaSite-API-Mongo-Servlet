@@ -33,22 +33,28 @@ var SignInComponent = (function () {
         this.businessDiagnostic = "Your current business";
         this.pictureDiagnostic = "Your photo";
         this.invalidCredentials = false;
-        this.invalidCredentialsDiagnostic = "Invalid username and/or password!";
+        this.invalidCredentialsBaseDiagnostic = "Invalid username and/or password!";
+        this.invalidCredentialsDiagnostic = "";
     }
     SignInComponent.prototype.ngOnInit = function () {
         this.DOBMax = this._getTodaysDate();
     };
     SignInComponent.prototype.signIn = function () {
         this.authService.tryLogin(this.username, this.password)
-            .then(function (isValid) {
-            if (isValid) {
-                this.router.navigate(['/member/home']);
-            }
-            else {
-                this.invalidCredentials = true;
-                this.password = '';
-            }
-        }.bind(this));
+            .subscribe(this._handleLoginResult.bind(this), this._handleLoginError.bind(this));
+    };
+    SignInComponent.prototype._handleLoginResult = function (isValid) {
+        if (isValid) {
+            this.router.navigate(['/member/home']);
+        }
+        else {
+            this._handleLoginError('');
+        }
+    };
+    SignInComponent.prototype._handleLoginError = function (error) {
+        this.invalidCredentials = true;
+        this.password = '';
+        this.invalidCredentialsDiagnostic = this.invalidCredentialsBaseDiagnostic + (error ? (" " + error) : null);
     };
     SignInComponent.prototype.signUp = function () {
         this.signIn();

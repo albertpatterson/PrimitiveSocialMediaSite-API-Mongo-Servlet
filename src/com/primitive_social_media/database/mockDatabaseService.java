@@ -30,26 +30,28 @@ public class MockDatabaseService extends DatabaseService{
 //    private HashMap<String, ArrayList<String>> followingMap = new HashMap<>();
 
     public void  connect(){
+
+        String pwPrefix = "s_pw";
         try{
             String username;
             username = "Bob";
             addUser(username,
                     new PersonalData(username, username + "'s town", "01/02/2000", username+"'s business", username+"'s picture"),
-                     username+"'s password");
+                     username+pwPrefix);
                 addPost(username, new Post(username, username + "'s post 1"));
                 addPost(username, new Post(username, username + "'s post 2"));
 
             username = "Kim";
             addUser(username,
                     new PersonalData(username, username + "'s town", "01/02/2000", username+"'s business", username+"'s picture"),
-                    username+"'s password");
+                    username+pwPrefix);
             addPost(username, new Post(username, username+"'s post 1"));
             addPost(username, new Post(username, username+"'s post 2"));
 
             username = "Raj";
             addUser(username,
                     new PersonalData(username, username + "'s town", "01/02/2000", username+"'s business", username+"'s picture"),
-                    username+"'s password");
+                    username+pwPrefix);
             addPost(username, new Post(username, username+"'s post 1"));
             addPost(username, new Post(username, username+"'s post 2"));
 
