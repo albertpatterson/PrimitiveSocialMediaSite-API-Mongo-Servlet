@@ -21,7 +21,7 @@ var OtherComponent = (function () {
     OtherComponent.prototype.ngOnInit = function () {
         this.activatedRoute.params
             .switchMap(function (params) {
-            return this.searchService.search("^" + params["name"] + "$");
+            return this.searchService.search("^" + params["othersName"] + "$");
         }.bind(this))
             .subscribe(function (users) {
             if (users.length === 1) {

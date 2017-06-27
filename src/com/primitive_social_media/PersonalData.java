@@ -51,8 +51,6 @@ public class PersonalData extends JSONConvertible {
     }
 
     public String toJSON(){
-
-
         return  "{" +
                 "\"name\":%s, " +       name +", "+
                 "\"location\":%s, " +   location +", "+

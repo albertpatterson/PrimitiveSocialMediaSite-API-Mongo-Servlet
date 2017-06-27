@@ -45,7 +45,7 @@ var SignInComponent = (function () {
     };
     SignInComponent.prototype._handleLoginResult = function (isValid) {
         if (isValid) {
-            this.router.navigate(['/member/home']);
+            this.router.navigate(["member", this.username, "home"]);
         }
         else {
             this._handleLoginError('');

@@ -13,10 +13,11 @@ var router_1 = require("@angular/router");
 var auth_service_1 = require("./../services/auth.service");
 var message_service_1 = require("./services/message.service");
 var MemberComponent = (function () {
-    function MemberComponent(authService, router, messageService) {
+    function MemberComponent(authService, router, messageService, activatedRoute) {
         this.authService = authService;
         this.router = router;
         this.messageService = messageService;
+        this.activatedRoute = activatedRoute;
         this.searchPattern = '';
     }
     MemberComponent.prototype._setMessageCount = function () {
@@ -26,7 +27,7 @@ var MemberComponent = (function () {
         }.bind(this));
     };
     MemberComponent.prototype.search = function () {
-        this.router.navigate(['member/search', this.searchPattern]);
+        this.router.navigate(['member', this.username, 'search', this.searchPattern]);
     };
     MemberComponent.prototype.signout = function () {
         this.authService.signout()
@@ -35,20 +36,15 @@ var MemberComponent = (function () {
         }.bind(this));
     };
     MemberComponent.prototype.ngOnInit = function () {
-        this.authService.checkLogin()
-            .then(this._setMessageCount.bind(this));
-        this.router.events.subscribe(function (event) {
-            if (event.constructor.name === 'NavigationStart') {
-                this.authService.checkLogin()
-                    .then(function (isValid) {
-                    if (isValid) {
-                        this._setMessageCount();
-                    }
-                    else {
-                        this.router.navigate(['/signIn']);
-                    }
-                }.bind(this));
-            }
+        this.activatedRoute.params
+            .subscribe(function (params) {
+            console.log(params);
+            this.username = params["ownName"];
+            console.log('username', this.username);
+            this.authService.assertLoggedIn(this.username)
+                .then(this._setMessageCount.bind(this))
+                .catch(function (e) { return console.log(e); });
+            // check login
         }.bind(this));
     };
     return MemberComponent;
@@ -60,7 +56,8 @@ MemberComponent = __decorate([
     }),
     __metadata("design:paramtypes", [auth_service_1.AuthService,
         router_1.Router,
-        message_service_1.MessageService])
+        message_service_1.MessageService,
+        router_1.ActivatedRoute])
 ], MemberComponent);
 exports.MemberComponent = MemberComponent;
 //# sourceMappingURL=member.component.js.map

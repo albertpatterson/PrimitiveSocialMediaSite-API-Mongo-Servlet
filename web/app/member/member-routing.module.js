@@ -14,11 +14,11 @@ var other_component_1 = require("./other/other.component");
 var search_component_1 = require("./search/search.component");
 var premium_component_1 = require("./premium/premium.component");
 var routes = [
-    { path: 'member',
+    { path: 'member/:ownName',
         component: member_component_1.MemberComponent,
         children: [
             { path: 'home', component: home_component_1.HomeComponent },
-            { path: 'other/:name', component: other_component_1.OtherComponent },
+            { path: 'other/:othersName', component: other_component_1.OtherComponent },
             { path: 'messages', component: messages_component_1.MessagesComponent },
             { path: 'search/:pattern', component: search_component_1.SearchComponent },
             { path: 'premium', component: premium_component_1.PremiumComponent }
