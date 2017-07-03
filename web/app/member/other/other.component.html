@@ -1,0 +1,26 @@
+<div *ngIf="user" class="row">
+    <div class="col-sm-6 overflowHidden">
+        <img src="{{user.picture}}" alt="{{user.name}}'s photo'" class="fullsize centered">
+    </div>
+    <div class="col-sm-6">
+        <p class="centeredText">Name: {{user.name}}<br>Age: {{user.age}}<br>Location: {{user.location}}<br>Business: {{user.business}}</p>
+        <br>
+        <button class="followButton " >Follow</button><button class="messageButton" data-toggle="collapse" data-target="#sendMessageContainer">Message</button>                    
+    </div>
+</div>
+<div id="sendMessageContainer" class="collapse">
+    <div class="large centered">
+        <message-form   rows="15" 
+                        label="Message"
+                        (postSubmitted)="sendMessage($event)"></message-form>
+    </div>
+</div>
+<div *ngFor="let post of ownPosts" class="row">
+    <div class="col-xs-12">
+        <br>
+        <div class="postContainer">
+            <p class="posterName">{{post.poster}}</p>
+            <p class="posterContent">{{post.content}}</p>
+        </div>
+    </div>
+</div>
