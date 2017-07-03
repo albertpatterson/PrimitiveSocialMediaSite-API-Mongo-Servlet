@@ -14,6 +14,7 @@ public class UserData {
     public ArrayList<Post> messages = new ArrayList<>();
     public ArrayList<String> followedBy = new ArrayList<>();
     public ArrayList<String> following = new ArrayList<>();
+    public ArrayList<PremiumContent> premiumContent = new ArrayList<>();
 
     public UserData(String username, String password, PersonalData personalData){
         this.username = username;

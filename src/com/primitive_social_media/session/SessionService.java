@@ -14,7 +14,7 @@ import javax.servlet.http.HttpSession;
  */
 public class SessionService {
 
-    private DatabaseService databaseService = new MockDatabaseService();
+    private DatabaseService databaseService = MockDatabaseService.getInstance();
 
     public void connect(){
         databaseService.connect();
@@ -39,6 +39,11 @@ public class SessionService {
     }
 
     public void assertSession(HttpServletRequest request) throws SessionNotValidException, NullParameterException {
+
+        if(!request.isRequestedSessionIdValid()){
+            throw new SessionNotValidException();
+        }
+
         String username = NullParameterException.assertParameter(request,"username");
         HttpSession session = request.getSession();
         Object sessionUsername = session.getAttribute("username");

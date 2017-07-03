@@ -2,6 +2,7 @@ package com.primitive_social_media.database;
 
 import com.primitive_social_media.PersonalData;
 import com.primitive_social_media.Post;
+import com.primitive_social_media.PremiumContent;
 import com.primitive_social_media.exception.InvalidDataException;
 import com.primitive_social_media.exception.UserNotExistsException;
 
@@ -88,8 +89,19 @@ public abstract class DatabaseService {
 
     public abstract void deleteFollower(String followeeUsername, String followerUsername) throws UserNotExistsException;
 
+    public abstract ArrayList<String> getSubscriptions(String username) throws UserNotExistsException;
+
+    public abstract void addSubscription(String username, String followee) throws UserNotExistsException;
+
+    public abstract void deleteSubscription(String username, String followee) throws UserNotExistsException;
 
     protected abstract void addFollowee(String followeeUsername, String followerUsername) throws UserNotExistsException;
 
     protected abstract void deleteFollowee(String followeeUsername, String followerUsername) throws UserNotExistsException;
+
+    public abstract ArrayList<PremiumContent> getPremium(String username) throws UserNotExistsException;
+
+    public abstract void addPremium(String username, PremiumContent content) throws UserNotExistsException;
+
+    public abstract void deletePremium(String username, int index) throws UserNotExistsException;
 }

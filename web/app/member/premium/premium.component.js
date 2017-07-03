@@ -9,16 +9,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-// import {PremiumService} from './../services/premium.service';
-var mock_premium_service_1 = require("./../services/mock_premium.service");
+var premium_service_1 = require("./../services/premium.service");
 var PremiumComponent = (function () {
     function PremiumComponent(premiumService) {
         this.premiumService = premiumService;
     }
     PremiumComponent.prototype.ngOnInit = function () {
-        this.premiumService.getPremiumItems(this.username)
+        this.premiumService.getPremium(this.username)
             .then(function (premiumItems) {
-            this.premiumGroups = this._toGrid(premiumItems, 3);
+            var premiumStrings = premiumItems.map(function (item) { return item.content; });
+            this.premiumGroups = this._toGrid(premiumStrings, 3);
         }.bind(this));
     };
     PremiumComponent.prototype.onSubmit = function () {
@@ -41,7 +41,7 @@ PremiumComponent = __decorate([
         templateUrl: './premium.component.html',
         styleUrls: ['./../member.component.css', './premium.component.css']
     }),
-    __metadata("design:paramtypes", [mock_premium_service_1.PremiumService])
+    __metadata("design:paramtypes", [premium_service_1.PremiumService])
 ], PremiumComponent);
 exports.PremiumComponent = PremiumComponent;
 //# sourceMappingURL=premium.component.js.map

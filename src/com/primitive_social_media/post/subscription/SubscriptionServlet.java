@@ -1,4 +1,4 @@
-package com.primitive_social_media.post;
+package com.primitive_social_media.post.subscription;
 
 import com.primitive_social_media.JSONConvertible;
 import com.primitive_social_media.Post;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
  * Created by apatters on 6/11/2017.
  */
 @WebServlet(name = "PersonalDataServlet")
-public class PostServlet extends HttpServlet {
+public class SubscriptionServlet extends HttpServlet {
 
     private SessionService sessionService = new SessionService();
     private DatabaseService databaseService = MockDatabaseService.getInstance();
@@ -38,15 +38,15 @@ public class PostServlet extends HttpServlet {
         try{
             sessionService.assertSession(request);
 
-            String poster = NullParameterException.assertParameter(request,"username");
-            String content = NullParameterException.assertParameter(request,"content");
+            String username = NullParameterException.assertParameter(request,"username");
+            String followee = NullParameterException.assertParameter(request,"followee");
 
-            databaseService.addPost(poster, new Post(poster, content));
+            databaseService.addSubscription(username, followee);
 
             response.setContentType("text/plain");
             response.setStatus(HttpServletResponse.SC_CREATED);
 
-            System.out.println("Created a Post");
+            System.out.println("Created a subscription");
 
         }catch(ServiceException serviceException){
             serviceException.respond(response);
@@ -58,25 +58,11 @@ public class PostServlet extends HttpServlet {
         try{
             sessionService.assertSession(request);
 
-            String postType = NullParameterException.assertParameter(request,"type");
-            ArrayList<Post> posts;
+            String username = NullParameterException.assertParameter(request,"username");
 
-            switch(postType) {
-                case "followed":
-                    String username = request.getParameter("username");
-                    posts = databaseService.getFollowedPosts(username);
-                    break;
-                case "own":
-                    String poster = NullParameterException.assertParameter(request,"poster");
-                    posts = databaseService.getOwnPosts(poster);
-                    break;
-                default:
-                    String msg = String.format("Invalid post type requested: %s", postType);
-                    System.out.println(msg);
-                    throw new InvalidDataException(msg);
-            }
+            ArrayList<String> subscriptions = databaseService.getSubscriptions(username);
 
-            String JSON = JSONConvertible.toJSONList(posts);
+            String JSON = JSONConvertible.toJSONListFromStrings(subscriptions);
 
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json; charset=UTF-8");
@@ -96,20 +82,14 @@ public class PostServlet extends HttpServlet {
             sessionService.assertSession(request);
 
             String username = NullParameterException.assertParameter(request,"username");
-            String indexStr = NullParameterException.assertParameter(request,"index");
-            try {
-                int index = Integer.parseInt(indexStr);
+            String followee = NullParameterException.assertParameter(request,"followee");
 
-                databaseService.deletePost(username, index);
+            databaseService.deleteSubscription(username, followee);
 
-                response.setStatus(HttpServletResponse.SC_NO_CONTENT);
+            response.setContentType("text/plain");
+            response.setStatus(HttpServletResponse.SC_NO_CONTENT);
 
-                System.out.println("Deleted a Post");
-            }catch(NumberFormatException numberFormatException){
-                String msg = String.format("invalid index \"%s\"", indexStr);
-                throw new InvalidDataException(msg);
-            }
-
+            System.out.println("deleted a subscription");
         }catch(ServiceException serviceException){
             serviceException.respond(response);
         }

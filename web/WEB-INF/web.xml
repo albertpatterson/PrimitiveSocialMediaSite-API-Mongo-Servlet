@@ -42,4 +42,23 @@
         <url-pattern>/message</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>premium</servlet-name>
+        <servlet-class>com.primitive_social_media.premium.PremiumServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>premium</servlet-name>
+        <url-pattern>/premium</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>subscription</servlet-name>
+        <servlet-class>com.primitive_social_media.post.subscription.SubscriptionServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>subscription</servlet-name>
+        <url-pattern>/subscription</url-pattern>
+    </servlet-mapping>
+
 </web-app>

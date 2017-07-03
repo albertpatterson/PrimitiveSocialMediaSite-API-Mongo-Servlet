@@ -12,62 +12,52 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 var handleResponse_1 = require("../../utils/handleResponse");
 require("rxjs/add/operator/toPromise");
-var PostService = (function () {
-    function PostService(http) {
+var SubscriptionService = (function () {
+    function SubscriptionService(http) {
         this.http = http;
-        this._postUrl = "/post";
+        this._subscriptionUrl = "/subscription";
     }
-    PostService.prototype.getFollowedPosts = function (username) {
-        return this._getPosts(username, username, "followed");
-    };
-    PostService.prototype.getOwnPosts = function (username, poster) {
-        return this._getPosts(username, poster, "own");
-    };
-    PostService.prototype._getPosts = function (username, poster, type) {
+    SubscriptionService.prototype.getSubscriptions = function (username) {
         var _this = this;
         return new Promise(function (res, rej) {
             var data = new http_1.URLSearchParams();
             data.append('username', username);
-            data.append('poster', poster);
-            data.append('type', type);
             var resolver = function (resp) { return res(resp.json().data); };
-            _this.http.get(_this._postUrl, { search: data })
+            _this.http.get(_this._subscriptionUrl, data)
                 .toPromise()
-                .then(function (resp) { return handleResponse_1.assertStatus(resolver, resp, 200, "Could not get posts."); })
+                .then(function (resp) { return handleResponse_1.assertStatus(resolver, resp, 204, "Could not get subscriptions."); })
                 .catch(function (err) { return handleResponse_1.handleError(rej, err); });
         });
     };
-    // }
-    PostService.prototype.addPost = function (username, content) {
-        var _this = this;
-        console.log('add post', username, content);
-        return new Promise(function (res, rej) {
-            var data = new http_1.URLSearchParams();
-            data.append('username', username);
-            data.append('content', content);
-            _this.http.post(_this._postUrl, data)
-                .toPromise()
-                .then(function (resp) { return handleResponse_1.assertStatus(res, resp, 201, "Could not add post."); })
-                .catch(function (err) { return handleResponse_1.handleError(rej, err); });
-        });
-    };
-    PostService.prototype.deletePost = function (username, idx) {
+    SubscriptionService.prototype.addSubscription = function (username, followee) {
         var _this = this;
         return new Promise(function (res, rej) {
             var data = new http_1.URLSearchParams();
             data.append('username', username);
-            data.append('index', idx.toString());
-            _this.http.delete(_this._postUrl, { search: data })
+            data.append('followee', followee);
+            _this.http.post(_this._subscriptionUrl, data)
                 .toPromise()
-                .then(function (resp) { return handleResponse_1.assertStatus(res, resp, 204, "Could not delete post."); })
+                .then(function (resp) { return handleResponse_1.assertStatus(res, resp, 201, "Could not add subscription."); })
                 .catch(function (err) { return handleResponse_1.handleError(rej, err); });
         });
     };
-    return PostService;
+    SubscriptionService.prototype.deleteSubscription = function (username, followee) {
+        var _this = this;
+        return new Promise(function (res, rej) {
+            var data = new http_1.URLSearchParams();
+            data.append('username', username);
+            data.append('followee', followee);
+            _this.http.delete(_this._subscriptionUrl, { search: data })
+                .toPromise()
+                .then(function (resp) { return handleResponse_1.assertStatus(res, resp, 204, "Could not delete subscription."); })
+                .catch(function (err) { return handleResponse_1.handleError(rej, err); });
+        });
+    };
+    return SubscriptionService;
 }());
-PostService = __decorate([
+SubscriptionService = __decorate([
     core_1.Injectable(),
     __metadata("design:paramtypes", [http_1.Http])
-], PostService);
-exports.PostService = PostService;
-//# sourceMappingURL=post.service.js.map
+], SubscriptionService);
+exports.SubscriptionService = SubscriptionService;
+//# sourceMappingURL=subscription.service.js.map

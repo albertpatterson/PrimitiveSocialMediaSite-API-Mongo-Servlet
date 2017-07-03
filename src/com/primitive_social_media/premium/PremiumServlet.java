@@ -1,7 +1,8 @@
-package com.primitive_social_media.post;
+package com.primitive_social_media.premium;
 
 import com.primitive_social_media.JSONConvertible;
 import com.primitive_social_media.Post;
+import com.primitive_social_media.PremiumContent;
 import com.primitive_social_media.database.DatabaseService;
 import com.primitive_social_media.database.MockDatabaseService;
 import com.primitive_social_media.exception.InvalidDataException;
@@ -19,18 +20,17 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 /**
- * Created by apatters on 6/11/2017.
+ * Created by apatters on 7/3/2017.
  */
-@WebServlet(name = "PersonalDataServlet")
-public class PostServlet extends HttpServlet {
-
+@WebServlet(name = "PremiumServlet")
+public class PremiumServlet extends HttpServlet {
     private SessionService sessionService = new SessionService();
     private DatabaseService databaseService = MockDatabaseService.getInstance();
 
     // connect to database on init
     public void init(){
         databaseService.connect();
-        System.out.println("Initialized Post Servlet");
+        System.out.println("Initialized Premium Servlet");
     }
 
 
@@ -38,15 +38,15 @@ public class PostServlet extends HttpServlet {
         try{
             sessionService.assertSession(request);
 
-            String poster = NullParameterException.assertParameter(request,"username");
+            String username = NullParameterException.assertParameter(request,"username");
             String content = NullParameterException.assertParameter(request,"content");
 
-            databaseService.addPost(poster, new Post(poster, content));
+            databaseService.addPremium(username, new PremiumContent(content));
 
             response.setContentType("text/plain");
             response.setStatus(HttpServletResponse.SC_CREATED);
 
-            System.out.println("Created a Post");
+            System.out.println("Created a Premium item");
 
         }catch(ServiceException serviceException){
             serviceException.respond(response);
@@ -55,38 +55,22 @@ public class PostServlet extends HttpServlet {
 
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        try{
+        try {
             sessionService.assertSession(request);
 
-            String postType = NullParameterException.assertParameter(request,"type");
-            ArrayList<Post> posts;
+            String username = NullParameterException.assertParameter(request,"username");
 
-            switch(postType) {
-                case "followed":
-                    String username = request.getParameter("username");
-                    posts = databaseService.getFollowedPosts(username);
-                    break;
-                case "own":
-                    String poster = NullParameterException.assertParameter(request,"poster");
-                    posts = databaseService.getOwnPosts(poster);
-                    break;
-                default:
-                    String msg = String.format("Invalid post type requested: %s", postType);
-                    System.out.println(msg);
-                    throw new InvalidDataException(msg);
-            }
-
-            String JSON = JSONConvertible.toJSONList(posts);
+            ArrayList<PremiumContent> premiumContent = databaseService.getPremium(username);
+            String JSON = JSONConvertible.toJSONList(premiumContent);
 
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json; charset=UTF-8");
             PrintWriter out = response.getWriter();
             out.print(JSON);
-            out.flush();
-            System.out.println("Sent Posts");
 
-        }catch(ServiceException serviceException){
-            serviceException.respond(response);
+            System.out.println("Sent Premium items");
+        } catch (ServiceException e) {
+            e.respond(response);
         }
     }
 
@@ -100,11 +84,11 @@ public class PostServlet extends HttpServlet {
             try {
                 int index = Integer.parseInt(indexStr);
 
-                databaseService.deletePost(username, index);
+                databaseService.deletePremium(username, index);
 
                 response.setStatus(HttpServletResponse.SC_NO_CONTENT);
 
-                System.out.println("Deleted a Post");
+                System.out.println("Deleted a Premium item");
             }catch(NumberFormatException numberFormatException){
                 String msg = String.format("invalid index \"%s\"", indexStr);
                 throw new InvalidDataException(msg);
@@ -122,4 +106,3 @@ public class PostServlet extends HttpServlet {
         System.out.println("Destroyed");
     }
 }
-

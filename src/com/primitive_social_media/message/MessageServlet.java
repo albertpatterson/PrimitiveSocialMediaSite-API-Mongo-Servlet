@@ -23,7 +23,7 @@ import java.util.ArrayList;
 public class MessageServlet extends HttpServlet {
 
     private SessionService sessionService = new SessionService();
-    private DatabaseService databaseService = new MockDatabaseService();
+    private DatabaseService databaseService = MockDatabaseService.getInstance();
 
     // connect to database on init
     public void init(){
@@ -38,10 +38,11 @@ public class MessageServlet extends HttpServlet {
             sessionService.assertSession(request);
 
 
-            String poster = NullParameterException.assertParameter(request, "poster");
+            String poster = NullParameterException.assertParameter(request, "username");
             String content = NullParameterException.assertParameter(request, "content");
+            String recipient = NullParameterException.assertParameter(request, "recipient");
 
-            databaseService.addMessage(poster, new Post(poster, content));
+            databaseService.addMessage(recipient, new Post(poster, content));
 
             response.setStatus(HttpServletResponse.SC_CREATED);
             System.out.println("Created a Message");
@@ -58,7 +59,7 @@ public class MessageServlet extends HttpServlet {
 
             String username = NullParameterException.assertParameter(request,"username");
 
-            ArrayList<Post> messages = databaseService.getFollowedPosts(username);
+            ArrayList<Post> messages = databaseService.getMessages(username);
             String JSON = JSONConvertible.toJSONList(messages);
 
             response.setStatus(HttpServletResponse.SC_OK);
@@ -66,7 +67,7 @@ public class MessageServlet extends HttpServlet {
             PrintWriter out = response.getWriter();
             out.print(JSON);
 
-            System.out.println("Sent Posts");
+            System.out.println("Sent Messages");
         } catch (ServiceException e) {
             e.respond(response);
         }

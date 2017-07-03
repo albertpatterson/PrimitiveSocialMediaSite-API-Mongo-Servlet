@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class MockDatabaseServiceTest extends TestCase{
 
-    private com.primitive_social_media.database.MockDatabaseService mockDatabaseService = new MockDatabaseService();
+    private MockDatabaseService mockDatabaseService = MockDatabaseService.getInstance();
 
 
     public void testAddUser(){

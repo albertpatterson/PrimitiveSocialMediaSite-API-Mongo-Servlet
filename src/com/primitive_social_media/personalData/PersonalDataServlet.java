@@ -23,7 +23,7 @@ import java.text.ParseException;
 @WebServlet(name = "PersonalDataServlet")
 public class PersonalDataServlet extends HttpServlet {
 
-    private DatabaseService databaseService = new MockDatabaseService();
+    private DatabaseService databaseService = MockDatabaseService.getInstance();
     private SessionService sessionService = new SessionService();
 
 

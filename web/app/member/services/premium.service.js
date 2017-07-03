@@ -5,23 +5,61 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var core_1 = require("@angular/core");
-var mockPremiumItems = ["http://cdn3-www.dogtime.com/assets/uploads/gallery/30-impossibly-cute-puppies/impossibly-cute-puppy-21.jpg",
-    "http://cdn2-www.dogtime.com/assets/uploads/gallery/30-impossibly-cute-puppies/impossibly-cute-puppy-8.jpg",
-    "http://cdn1-www.dogtime.com/assets/uploads/gallery/30-impossibly-cute-puppies/impossibly-cute-puppy-2.jpg",
-    "http://cdn3-www.dogtime.com/assets/uploads/gallery/30-impossibly-cute-puppies/impossibly-cute-puppy-5.jpg",
-    "https://www.cesarsway.com/sites/newcesarsway/files/styles/large_article_preview/public/All-about-puppies--Cesar%E2%80%99s-tips%2C-tricks-and-advice.jpg?itok=bi9xUvwe"];
+var http_1 = require("@angular/http");
+var handleResponse_1 = require("../../utils/handleResponse");
+require("rxjs/add/operator/toPromise");
 var PremiumService = (function () {
-    function PremiumService() {
+    function PremiumService(http) {
+        this.http = http;
+        this._premiumUrl = "/premium";
     }
-    PremiumService.prototype.getPremiumItems = function () {
-        // return Promise.resolve(mockPremiumItems);
-        return new Promise(function (r) { return setTimeout(function () { return r(mockPremiumItems); }, 1e3); });
+    PremiumService.prototype.getPremium = function (username) {
+        var _this = this;
+        return new Promise(function (res, rej) {
+            var data = new http_1.URLSearchParams();
+            data.append("username", username);
+            var resolver = function (resp) { return res(resp.json().data); };
+            _this.http.get(_this._premiumUrl, { search: data })
+                .toPromise()
+                .then(function (resp) { return handleResponse_1.assertStatus(resolver, resp, 200, "Unable to get premium items"); })
+                .catch(function (err) { return handleResponse_1.handleError(rej, err); });
+        });
+    };
+    PremiumService.prototype.addPremium = function (username, content) {
+        var _this = this;
+        return new Promise(function (res, rej) {
+            var data = new http_1.URLSearchParams();
+            data.append("username", username);
+            data.append("item", content);
+            var resolver = function () { return res(); };
+            _this.http.post(_this._premiumUrl, data)
+                .toPromise()
+                .then(function (resp) { return handleResponse_1.assertStatus(resolver, resp, 201, "Unable to add premium item"); })
+                .catch(function (err) { return handleResponse_1.handleError(rej, err); });
+        });
+    };
+    PremiumService.prototype.deletePremium = function (username, index) {
+        var _this = this;
+        return new Promise(function (res, rej) {
+            var data = new http_1.URLSearchParams();
+            data.append("username", username);
+            data.append("index", index.toString());
+            var resolver = function () { return res(); };
+            _this.http.delete(_this._premiumUrl, { search: data })
+                .toPromise()
+                .then(function (resp) { return handleResponse_1.assertStatus(resolver, resp, 204, "Unable to delete premium item"); })
+                .catch(function (err) { return handleResponse_1.handleError(rej, err); });
+        });
     };
     return PremiumService;
 }());
 PremiumService = __decorate([
-    core_1.Injectable()
+    core_1.Injectable(),
+    __metadata("design:paramtypes", [http_1.Http])
 ], PremiumService);
 exports.PremiumService = PremiumService;
 //# sourceMappingURL=premium.service.js.map

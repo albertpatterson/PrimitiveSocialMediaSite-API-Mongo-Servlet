@@ -9,18 +9,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var router_1 = require("@angular/router");
 // import { SearchService } from '../services/search.service';
 var mock_search_service_1 = require("../services/mock_search.service");
 var post_service_1 = require("../services/post.service");
 // import {PostService} from './../services/mock_post.service';
 var message_service_1 = require("./../services/message.service");
+// import {MessageService} from './../services/mock_message.service';
+var subscription_service_1 = require("./../services/subscription.service");
 var OtherComponent = (function () {
-    function OtherComponent(searchService, postService, messageService, activatedRoute) {
+    function OtherComponent(searchService, postService, messageService, subscriptionService) {
         this.searchService = searchService;
         this.postService = postService;
         this.messageService = messageService;
-        this.activatedRoute = activatedRoute;
+        this.subscriptionService = subscriptionService;
     }
     OtherComponent.prototype.ngOnInit = function () {
         //    this.activatedRoute.params 
@@ -32,7 +33,7 @@ var OtherComponent = (function () {
             .then(function (users) {
             if (users.length === 1) {
                 this.user = users[0];
-                this.postService.getOwnPosts(this.user.name)
+                this.postService.getOwnPosts(this.username, this.user.name)
                     .then(function (ownPosts) {
                     this.ownPosts = ownPosts;
                 }.bind(this));
@@ -45,7 +46,12 @@ var OtherComponent = (function () {
     };
     OtherComponent.prototype.sendMessage = function (message) {
         alert(message);
-        this.messageService.addMessage(this.username, message, this.othersName);
+        this.messageService.addMessage(this.username, message, this.othersName)
+            .then(function () { return alert("Message Sent!"); });
+    };
+    OtherComponent.prototype.subscribe = function () {
+        this.subscriptionService.addSubscription(this.username, this.user.name)
+            .then(function () { return alert("Subscribed!"); });
     };
     return OtherComponent;
 }());
@@ -59,7 +65,7 @@ OtherComponent = __decorate([
     __metadata("design:paramtypes", [mock_search_service_1.SearchService,
         post_service_1.PostService,
         message_service_1.MessageService,
-        router_1.ActivatedRoute])
+        subscription_service_1.SubscriptionService])
 ], OtherComponent);
 exports.OtherComponent = OtherComponent;
 //# sourceMappingURL=other.component.js.map
