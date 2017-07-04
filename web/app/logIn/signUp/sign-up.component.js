@@ -9,12 +9,10 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var router_1 = require("@angular/router");
 var sign_up_service_1 = require("./../../services/sign-up.service");
 var SignUpComponent = (function () {
-    function SignUpComponent(signUpService, router) {
+    function SignUpComponent(signUpService) {
         this.signUpService = signUpService;
-        this.router = router;
         this.signedUpEvent = new core_1.EventEmitter();
         this.usernamePattern = "\\w{1,10}";
         this.usernameDiagnostic = "username must be alphanumeric and be between 1 and 10 characters";
@@ -31,7 +29,14 @@ var SignUpComponent = (function () {
         this.DOBMax = this._getTodaysDate();
     };
     SignUpComponent.prototype.signUp = function () {
-        // this.signedUpEvent.next(this.username)
+        var _this = this;
+        console.log('call sign up service');
+        this.signUpService.signUp(this.username, this.location, this.DOB, this.business, this.picture, this.password)
+            .then(function () { console.log('response from sign up request'); _this.signedUpEvent.next(_this.username); })
+            .catch(function (err) { return console.log(err); });
+    };
+    SignUpComponent.prototype.addPicture = function (event) {
+        this.picture = event.target.files[0];
     };
     SignUpComponent.prototype._handleSignUpError = function (error) {
     };
@@ -51,8 +56,7 @@ SignUpComponent = __decorate([
         templateUrl: './sign-up.component.html',
         styleUrls: ['./sign-up.component.css']
     }),
-    __metadata("design:paramtypes", [sign_up_service_1.SignUpService,
-        router_1.Router])
+    __metadata("design:paramtypes", [sign_up_service_1.SignUpService])
 ], SignUpComponent);
 exports.SignUpComponent = SignUpComponent;
 //# sourceMappingURL=sign-up.component.js.map

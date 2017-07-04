@@ -8,11 +8,11 @@
                     class="form-control" 
                     id="username" 
                     required 
-                    [(ngModel)]="signUpUsername" 
+                    [(ngModel)]="username" 
                     name="username" 
-                    #signUpUsernameInput="ngModel" 
+                    #usernameInput="ngModel" 
                     pattern={{usernamePattern}}>
-            <div  [hidden]="signUpUsernameInput.valid&&!signUpUsernameInput.pristine" 
+            <div  [hidden]="usernameInput.valid&&!usernameInput.pristine" 
                     class="alert alert-danger">{{usernameDiagnostic}}</div>                
         </div>
         <!--password-->
@@ -23,10 +23,10 @@
                     name="password" 
                     id="password" 
                     required 
-                    [(ngModel)]="signUpPassword" 
-                    #signUpPasswordInput = "ngModel"
+                    [(ngModel)]="password" 
+                    #passwordInput = "ngModel"
                     pattern={{passwordPattern}}>
-            <div  [hidden]="signUpPasswordInput.valid&&!signUpPasswordInput.pristine" 
+            <div  [hidden]="passwordInput.valid&&!passwordInput.pristine" 
                     class="alert alert-danger">{{passwordDiagnostic}}</div>
             </div>
         <!--Location-->
@@ -59,7 +59,7 @@
             </div>          
         <!--Business-->
         <div class="form-group">
-            <label for="location">Business</label>
+            <label for="business">Business</label>
             <input  type="text" 
                     class="form-control" 
                     name="business" 

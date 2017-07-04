@@ -22,7 +22,8 @@ public class PersonalData extends JSONConvertible {
         this.business = business;
         this.picture = picture;
 
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+//        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         try {
             this.DOB = formatter.parse(DOBString);
         } catch (ParseException e) {

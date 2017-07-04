@@ -61,4 +61,15 @@
         <url-pattern>/subscription</url-pattern>
     </servlet-mapping>
 
+
+    <servlet>
+        <servlet-name>signUp</servlet-name>
+        <servlet-class>com.primitive_social_media.signUp.SignUpServlet</servlet-class>
+        <multipart-config></multipart-config>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>signUp</servlet-name>
+        <url-pattern>/signUp</url-pattern>
+    </servlet-mapping>
+
 </web-app>
