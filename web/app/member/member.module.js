@@ -16,6 +16,7 @@ var other_component_1 = require("./other/other.component");
 var search_component_1 = require("./search/search.component");
 var premium_component_1 = require("./premium/premium.component");
 var message_form_component_1 = require("./utils/messageForm/message-form.component");
+var post_component_1 = require("./utils/post/post.component");
 var auth_service_1 = require("./../services/auth.service");
 var message_service_1 = require("./services/message.service");
 var post_service_1 = require("./services/post.service");
@@ -43,7 +44,8 @@ MemberModule = __decorate([
             other_component_1.OtherComponent,
             search_component_1.SearchComponent,
             premium_component_1.PremiumComponent,
-            message_form_component_1.MessageFormComponent],
+            message_form_component_1.MessageFormComponent,
+            post_component_1.PostComponent],
         providers: [auth_service_1.AuthService,
             message_service_1.MessageService,
             post_service_1.PostService,

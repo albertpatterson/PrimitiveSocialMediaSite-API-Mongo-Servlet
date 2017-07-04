@@ -15,12 +15,8 @@
                         (postSubmitted)="sendMessage($event)"></message-form>
     </div>
 </div>
-<div *ngFor="let post of ownPosts" class="row">
-    <div class="col-xs-12">
-        <br>
-        <div class="postContainer">
-            <p class="posterName">{{post.poster}}</p>
-            <p class="posterContent">{{post.content}}</p>
-        </div>
+<div class="posts">
+    <div *ngFor="let post of ownPosts">
+        <post [poster]="post.poster" [timestamp]="post.timestamp" [content]="post.content"></post>
     </div>
 </div>

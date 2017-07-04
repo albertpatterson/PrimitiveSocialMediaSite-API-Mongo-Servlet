@@ -96,22 +96,6 @@ public class MockDatabaseService extends DatabaseService{
                     }
                 });
 
-//                following.forEach(followee -> {
-//                    try {
-//                        addFollowee(followee, mockUserName);
-//                    } catch (UserNotExistsException e) {
-//                        e.printStackTrace();
-//                    }
-//                });
-//
-//                followedBy.forEach(follower -> {
-//                    try {
-//                        addFollower(mockUserName, follower);
-//                    } catch (UserNotExistsException e) {
-//                        e.printStackTrace();
-//                    }
-//                });
-
             } catch (UserNotExistsException e) {
                 e.printStackTrace();
             }
@@ -375,11 +359,6 @@ public class MockDatabaseService extends DatabaseService{
 
 class MockUserData {
     public PersonalData personalData;
-//    public ArrayList<String> following;
-//    public ArrayList<String> followedBy;
-//    public ArrayList<PremiumContent> premiumContent;
-//    public ArrayList<Post> ownPosts;
-//    public ArrayList<Post> messages;
     public String password;
 
     private static int imgCount = 0;
@@ -392,14 +371,5 @@ class MockUserData {
     public MockUserData(String username) {
         personalData = new PersonalData(username, username + "_location", new Date(), username + "_business", imageInc());
         password = username + "pw";
-//        this.following = following;
-//        this.followedBy = followedBy;
-
     }
-
-
-//
-
-//    }
-
 }

@@ -1,12 +1,8 @@
 <div *ngIf="!messages">
 Loading...
 </div>
-<div *ngFor="let post of messages" class="row">
-    <br>
-    <div class="col-xs-12">
-        <div class="postContainer">
-            <p class="posterName">{{post.poster}}</p>
-            <p class="posterContent">{{post.content}}</p>
-        </div>
+<div class="posts">
+    <div *ngFor="let post of messages">
+        <post [poster]="post.poster" [timestamp]="post.timestamp" [content]="post.content"></post>
     </div>
 </div>
