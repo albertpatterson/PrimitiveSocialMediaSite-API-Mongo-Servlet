@@ -9,44 +9,25 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var router_1 = require("@angular/router");
-var auth_service_1 = require("./../services/auth.service");
-// import { AuthService } from './../services/mock_auth.service';
-var Model = (function () {
-    function Model() {
-    }
-    return Model;
-}());
+var auth_service_1 = require("./../../services/auth.service");
 var SignInComponent = (function () {
-    function SignInComponent(authService, router) {
+    function SignInComponent(authService) {
         this.authService = authService;
-        this.router = router;
+        this.signedInEvent = new core_1.EventEmitter();
         this.usernamePattern = "\\w{1,10}";
         this.usernameDiagnostic = "username must be alphanumeric and be between 1 and 10 characters";
         this.passwordPattern = "\\S{1,10}";
         this.passwordDiagnostic = "password must contain no white space and be between 1 and 10 characters";
-        this.signUpUsername = this.username;
-        this.signUpPassword = this.password;
-        this.locationPattern = ".*";
-        this.locationDiagnostic = "Your current location";
-        this.DOBDiagnostic = "Your birth date";
-        this.businessPattern = ".*";
-        this.businessDiagnostic = "Your current business";
-        this.pictureDiagnostic = "Your photo";
         this.invalidCredentials = false;
         this.invalidCredentialsBaseDiagnostic = "Invalid username and/or password!";
         this.invalidCredentialsDiagnostic = "";
     }
-    SignInComponent.prototype.ngOnInit = function () {
-        this.DOBMax = this._getTodaysDate();
-    };
     SignInComponent.prototype.signIn = function () {
+        var _this = this;
+        console.log(" sign in " + this.username + " " + this.password);
         this.authService.tryLogin(this.username, this.password)
-            .then(this._handleLoginResult.bind(this))
+            .then(function () { return _this.signedInEvent.next(_this.username); })
             .catch(this._handleLoginError.bind(this));
-    };
-    SignInComponent.prototype._handleLoginResult = function (isValid) {
-        this.router.navigate(["member", this.username]);
     };
     SignInComponent.prototype._handleLoginError = function (error) {
         console.log('login err', error);
@@ -54,30 +35,16 @@ var SignInComponent = (function () {
         this.password = '';
         this.invalidCredentialsDiagnostic = this.invalidCredentialsBaseDiagnostic + (error ? (" " + error) : null);
     };
-    SignInComponent.prototype.signUp = function () {
-        this.signIn();
-    };
-    SignInComponent.prototype.addPicture = function (event) {
-        this.picture = event.srcElement.files[0];
-        console.log(this.picture);
-    };
-    SignInComponent.prototype._getTodaysDate = function () {
-        var date = new Date();
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var day = date.getDate();
-        return year + "-" + (month > 9 ? month : "0" + month) + "-" + (day > 9 ? day : "0" + day);
-    };
     return SignInComponent;
 }());
 SignInComponent = __decorate([
     core_1.Component({
         selector: 'sign-in',
+        outputs: ["signedInEvent"],
         templateUrl: './sign-in.component.html',
         styleUrls: ['./sign-in.component.css']
     }),
-    __metadata("design:paramtypes", [auth_service_1.AuthService,
-        router_1.Router])
+    __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], SignInComponent);
 exports.SignInComponent = SignInComponent;
 //# sourceMappingURL=sign-in.component.js.map

@@ -7,10 +7,11 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
-var sign_in_component_1 = require("./signIn/sign-in.component");
+// import {SignInComponent} from './signIn/sign-in.component';
+var log_in_component_1 = require("./logIn/log-in.component");
 var not_found_component_1 = require("./not-found.component");
 var routes = [
-    { path: 'sign-in', component: sign_in_component_1.SignInComponent },
+    { path: 'sign-in', component: log_in_component_1.LogInComponent },
     { path: '', redirectTo: '/sign-in', pathMatch: 'full' },
     { path: '**', component: not_found_component_1.NotFoundComponent }
 ];

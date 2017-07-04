@@ -13,8 +13,12 @@ var app_routing_module_1 = require("./app-routing.module");
 var member_module_1 = require("./member/member.module");
 var app_component_1 = require("./app.component");
 var not_found_component_1 = require("./not-found.component");
-var sign_in_component_1 = require("./signIn/sign-in.component");
+// import { SignInComponent } from './signIn/sign-in.component';
+var log_in_component_1 = require("./logIn/log-in.component");
+var sign_in_component_1 = require("./logIn/signIn/sign-in.component");
+var sign_up_component_1 = require("./logIn/signUp/sign-up.component");
 var auth_service_1 = require("./services/auth.service");
+var sign_up_service_1 = require("./services/sign-up.service");
 // import { AuthService } from './services/mock_auth.service';
 var AppModule = (function () {
     function AppModule() {
@@ -31,9 +35,12 @@ AppModule = __decorate([
         ],
         declarations: [app_component_1.AppComponent,
             not_found_component_1.NotFoundComponent,
-            sign_in_component_1.SignInComponent],
+            log_in_component_1.LogInComponent,
+            sign_in_component_1.SignInComponent,
+            sign_up_component_1.SignUpComponent],
         bootstrap: [app_component_1.AppComponent],
-        providers: [auth_service_1.AuthService]
+        providers: [auth_service_1.AuthService,
+            sign_up_service_1.SignUpService]
     })
 ], AppModule);
 exports.AppModule = AppModule;
