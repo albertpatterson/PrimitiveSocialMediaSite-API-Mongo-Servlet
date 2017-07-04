@@ -9,13 +9,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-// import {SearchService} from './../services/search.service';
-var mock_search_service_1 = require("./../services/mock_search.service");
+var personal_data_service_1 = require("./../services/personal-data.service");
+// import {SearchService} from './../services/mock_search.service';
 var router_1 = require("@angular/router");
 require("rxjs/add/operator/switchMap");
 var SearchComponent = (function () {
-    function SearchComponent(searchService, route) {
-        this.searchService = searchService;
+    function SearchComponent(personalDataService, route) {
+        this.personalDataService = personalDataService;
         this.route = route;
         this.userSelect = new core_1.EventEmitter();
     }
@@ -36,7 +36,7 @@ var SearchComponent = (function () {
     };
     SearchComponent.prototype.ngOnChanges = function () {
         console.log('searchpattern', this.searchPattern);
-        this.searchService.search(this.searchPattern)
+        this.personalDataService.searchUserData(this.username, this.searchPattern)
             .then(function (users) {
             this.userGroups = this._toGrid(users, 3);
         }.bind(this));
@@ -62,7 +62,7 @@ SearchComponent = __decorate([
             './search.component.css'
         ]
     }),
-    __metadata("design:paramtypes", [mock_search_service_1.SearchService,
+    __metadata("design:paramtypes", [personal_data_service_1.PersonalDataService,
         router_1.ActivatedRoute])
 ], SearchComponent);
 exports.SearchComponent = SearchComponent;

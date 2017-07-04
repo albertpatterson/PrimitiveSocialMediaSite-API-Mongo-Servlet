@@ -8,6 +8,8 @@ import com.primitive_social_media.exception.InvalidDataException;
 import com.primitive_social_media.exception.UserNotExistsException;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by apatters on 6/17/2017.
@@ -86,22 +88,29 @@ public class MockDatabaseService extends DatabaseService{
                 start = (start + 1) % mockUserNames.size();
                 following.add(mockUserNames.get(start));
 
-
                 following.forEach(followee -> {
                     try {
-                        addFollowee(followee, mockUserName);
+                        addSubscription(mockUserName, followee);
                     } catch (UserNotExistsException e) {
                         e.printStackTrace();
                     }
                 });
 
-                followedBy.forEach(follower -> {
-                    try {
-                        addFollower(mockUserName, follower);
-                    } catch (UserNotExistsException e) {
-                        e.printStackTrace();
-                    }
-                });
+//                following.forEach(followee -> {
+//                    try {
+//                        addFollowee(followee, mockUserName);
+//                    } catch (UserNotExistsException e) {
+//                        e.printStackTrace();
+//                    }
+//                });
+//
+//                followedBy.forEach(follower -> {
+//                    try {
+//                        addFollower(mockUserName, follower);
+//                    } catch (UserNotExistsException e) {
+//                        e.printStackTrace();
+//                    }
+//                });
 
             } catch (UserNotExistsException e) {
                 e.printStackTrace();
@@ -164,10 +173,13 @@ public class MockDatabaseService extends DatabaseService{
      * @return map of matching personalData
      */
     public HashMap<String, PersonalData> findPersonalDataMultiple(String query){
+
+        Pattern p = Pattern.compile(query);
         HashMap<String, PersonalData> matches = new HashMap<>();
         for(HashMap.Entry<String, UserData> entry: userData.entrySet()){
             String key = entry.getKey();
-            if(key.matches(query)){
+            Matcher m = p.matcher(key);
+            if(m.matches()){
                 matches.put(key, new PersonalData(userData.get(key).personalData));
             }
         }

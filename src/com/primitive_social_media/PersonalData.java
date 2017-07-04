@@ -52,11 +52,11 @@ public class PersonalData extends JSONConvertible {
 
     public String toJSON(){
         return  "{" +
-                "\"name\":%s, " +       name +", "+
-                "\"location\":%s, " +   location +", "+
-                "\"DOB\":%s, " +        getDOBString() +", "+
-                "\"business\":%s, " +   business +", "+
-                "\"picture\":%s, " +    picture +", "+
+                "\"name\": \"" +       name +"\", "+
+                "\"location\": \"" +   location +"\", "+
+                "\"DOB\": \"" +        getDOBString() +"\", "+
+                "\"business\": \"" +   business +"\", "+
+                "\"picture\": \"" +    picture +"\""+
                 "}";
     }
 }

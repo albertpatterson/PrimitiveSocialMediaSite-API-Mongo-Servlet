@@ -10,15 +10,16 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 // import { SearchService } from '../services/search.service';
-var mock_search_service_1 = require("../services/mock_search.service");
+// import { SearchService } from '../services/mock_search.service';
+var personal_data_service_1 = require("./../services/personal-data.service");
 var post_service_1 = require("../services/post.service");
 // import {PostService} from './../services/mock_post.service';
 var message_service_1 = require("./../services/message.service");
 // import {MessageService} from './../services/mock_message.service';
 var subscription_service_1 = require("./../services/subscription.service");
 var OtherComponent = (function () {
-    function OtherComponent(searchService, postService, messageService, subscriptionService) {
-        this.searchService = searchService;
+    function OtherComponent(personalDataService, postService, messageService, subscriptionService) {
+        this.personalDataService = personalDataService;
         this.postService = postService;
         this.messageService = messageService;
         this.subscriptionService = subscriptionService;
@@ -29,19 +30,13 @@ var OtherComponent = (function () {
         //         return this.searchService.search(`^${params["othersName"]}$`);     
         //     }.bind(this))
         console.log('otherName', this.othersName);
-        this.searchService.search("^" + this.othersName + "$")
-            .then(function (users) {
-            if (users.length === 1) {
-                this.user = users[0];
-                this.postService.getOwnPosts(this.username, this.user.name)
-                    .then(function (ownPosts) {
-                    this.ownPosts = ownPosts;
-                }.bind(this));
-            }
-            else {
-                //handle error
-                console.log('multiple matches');
-            }
+        this.personalDataService.getUserData(this.username, this.othersName)
+            .then(function (user) {
+            this.user = user;
+            this.postService.getOwnPosts(this.username, this.user.name)
+                .then(function (ownPosts) {
+                this.ownPosts = ownPosts;
+            }.bind(this));
         }.bind(this));
     };
     OtherComponent.prototype.sendMessage = function (message) {
@@ -62,7 +57,7 @@ OtherComponent = __decorate([
         templateUrl: './other.component.html',
         styleUrls: ['./../member.component.css', './other.component.css']
     }),
-    __metadata("design:paramtypes", [mock_search_service_1.SearchService,
+    __metadata("design:paramtypes", [personal_data_service_1.PersonalDataService,
         post_service_1.PostService,
         message_service_1.MessageService,
         subscription_service_1.SubscriptionService])

@@ -49,8 +49,8 @@ var MemberComponent = (function () {
     };
     MemberComponent.prototype.visitUser = function (othersName) {
         console.log('visit other!', othersName);
-        this.view = "other";
         this.othersName = othersName;
+        this.view = "other";
     };
     MemberComponent.prototype.signout = function () {
         this.authService.signout(this.username)

@@ -1,5 +1,6 @@
 package com.primitive_social_media.personalData;
 
+import com.primitive_social_media.JSONConvertible;
 import com.primitive_social_media.PersonalData;
 import com.primitive_social_media.database.DatabaseService;
 import com.primitive_social_media.database.MockDatabaseService;
@@ -16,6 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by apatters on 6/11/2017.
@@ -60,13 +64,25 @@ public class PersonalDataServlet extends HttpServlet {
         try {
             sessionService.assertSession(request);
 
-            String username = NullParameterException.assertParameter(request,"username");
-            PersonalData data = databaseService.findPersonalData(username);
+            String responseJSON;
+            String desiredUserName = request.getParameter("desiredUserName");
+            if(desiredUserName != null){
+                PersonalData data = databaseService.findPersonalData(desiredUserName);
+                responseJSON = data.toJSON();
+            }else{
+                String desiredUserQuery = NullParameterException.assertParameter(request,"desiredUserQuery");
+                HashMap<String, PersonalData> matches = databaseService.findPersonalDataMultiple(desiredUserQuery);
+                ArrayList<PersonalData> data = new ArrayList<>(matches.size());
+                for(Map.Entry<String, PersonalData> match : matches.entrySet()){
+                    data.add(match.getValue());
+                }
+                responseJSON = JSONConvertible.toJSONList(data);
+            }
 
             response.setStatus(HttpServletResponse.SC_OK);
             response.setContentType("application/json");
             PrintWriter out = response.getWriter();
-            out.print(data.toJSON());
+            out.print(responseJSON);
 
         }catch(ServiceException serviceException){
             serviceException.respond(response);

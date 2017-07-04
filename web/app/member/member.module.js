@@ -19,13 +19,13 @@ var message_form_component_1 = require("./utils/messageForm/message-form.compone
 var auth_service_1 = require("./../services/auth.service");
 var message_service_1 = require("./services/message.service");
 var post_service_1 = require("./services/post.service");
-// import {SearchService} from './services/search.service';
+var personal_data_service_1 = require("./services/personal-data.service");
 var premium_service_1 = require("./services/premium.service");
 var subscription_service_1 = require("./services/subscription.service");
 // import {AuthService} from './../services/mock_auth.service'
 // import {MessageService} from './services/mock_message.service';
 // import {PostService} from './services/mock_post.service';
-var mock_search_service_1 = require("./services/mock_search.service");
+// import {SearchService} from './services/mock_search.service';
 // import {PremiumService} from './services/mock_premium.service';
 var MemberModule = (function () {
     function MemberModule() {
@@ -47,7 +47,7 @@ MemberModule = __decorate([
         providers: [auth_service_1.AuthService,
             message_service_1.MessageService,
             post_service_1.PostService,
-            mock_search_service_1.SearchService,
+            personal_data_service_1.PersonalDataService,
             premium_service_1.PremiumService,
             subscription_service_1.SubscriptionService]
     })
