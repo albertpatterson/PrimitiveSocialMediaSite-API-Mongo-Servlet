@@ -18,11 +18,17 @@ var PersonalDataService = (function () {
         this._personalDataUrl = "/personalData";
     }
     PersonalDataService.prototype.getUserData = function (username, desiredUserName) {
-        var resolverFactory = function (res) { return function (resp) { return res(resp.json()); }; };
+        var _this = this;
+        var resolverFactory = function (res) { return function (resp) { return res(_this._setAge(resp.json())); }; };
         return this._getUserData(username, "desiredUserName", desiredUserName, resolverFactory);
     };
+    PersonalDataService.prototype._setAge = function (user) {
+        user.age = Math.floor((Date.now() - Date.parse(user.DOB)) / 1000 / 60 / 60 / 24 / 365);
+        return user;
+    };
     PersonalDataService.prototype.searchUserData = function (username, desiredUserQuery) {
-        var resolverFactory = function (res) { return function (resp) { return res(resp.json().data); }; };
+        var _this = this;
+        var resolverFactory = function (res) { return function (resp) { return res(resp.json().data.map(function (user) { return _this._setAge(user); })); }; };
         return this._getUserData(username, "desiredUserQuery", desiredUserQuery, resolverFactory);
     };
     PersonalDataService.prototype._getUserData = function (username, paramType, param, resolverFactory) {

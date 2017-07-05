@@ -32,7 +32,7 @@ var SignUpComponent = (function () {
         var _this = this;
         console.log('call sign up service');
         this.signUpService.signUp(this.username, this.location, this.DOB, this.business, this.picture, this.password)
-            .then(function () { console.log('response from sign up request'); _this.signedUpEvent.next(_this.username); })
+            .then(function () { console.log('response from sign up request ' + _this.username); _this.signedUpEvent.next(_this.username); })
             .catch(function (err) { return console.log(err); });
     };
     SignUpComponent.prototype.addPicture = function (event) {

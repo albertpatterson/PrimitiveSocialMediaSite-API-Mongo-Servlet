@@ -1,7 +1,6 @@
 package com.primitive_social_media.signUp;
 
 import com.primitive_social_media.PersonalData;
-import com.primitive_social_media.Post;
 import com.primitive_social_media.database.DatabaseService;
 import com.primitive_social_media.database.MockDatabaseService;
 import com.primitive_social_media.exception.NullParameterException;
