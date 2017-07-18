@@ -29,8 +29,8 @@ var OtherComponent = (function () {
         //     .switchMap(function(params: Params){
         //         return this.searchService.search(`^${params["othersName"]}$`);     
         //     }.bind(this))
-        console.log('otherName', this.othersName);
-        this.personalDataService.getUserData(this.username, this.othersName)
+        console.log('otherName', this.profileUsername);
+        this.personalDataService.getUserData(this.username, this.profileUsername)
             .then(function (user) {
             this.user = user;
             this.postService.getOwnPosts(this.username, this.user.name)
@@ -41,7 +41,7 @@ var OtherComponent = (function () {
     };
     OtherComponent.prototype.sendMessage = function (message) {
         alert(message);
-        this.messageService.addMessage(this.username, message, this.othersName)
+        this.messageService.addMessage(this.username, message, this.profileUsername)
             .then(function () { return alert("Message Sent!"); });
     };
     OtherComponent.prototype.subscribe = function () {
@@ -53,7 +53,7 @@ var OtherComponent = (function () {
 OtherComponent = __decorate([
     core_1.Component({
         selector: 'member-other',
-        inputs: ['username', 'othersName'],
+        inputs: ['username', 'profileUsername'],
         templateUrl: './other.component.html',
         styleUrls: ['./../member.component.css', './other.component.css']
     }),

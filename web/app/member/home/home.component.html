@@ -30,7 +30,7 @@ Loading...
 </div>
 <div class="posts">
     <div *ngFor="let post of followedPosts">
-        <post [poster]="post.poster" [timestamp]="post.timestamp" [content]="post.content"></post>
+        <post [poster]="post.poster" [timestamp]="post.timestamp" [content]="post.content" (userSelect)="selectUser($event)"></post>
 
         <!--<div class="col-xs-12">
             <br>

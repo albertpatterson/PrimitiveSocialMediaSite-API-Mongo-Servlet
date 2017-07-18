@@ -20,8 +20,16 @@ var MemberComponent = (function () {
         this.router = router;
         this.messageService = messageService;
         this.activatedRoute = activatedRoute;
-        this.searchPattern = '';
+        // current view 
         this.view = "home";
+        // data required by the search component
+        this.searchComponentData = {
+            searchPattern: ''
+        };
+        // data required by the other user component
+        this.profileComponentData = {
+            profileUsername: ''
+        };
     }
     MemberComponent.prototype._setMessageCount = function () {
         console.log('get message count');
@@ -39,7 +47,7 @@ var MemberComponent = (function () {
     };
     MemberComponent.prototype.search = function (searchPattern) {
         console.log('search searchPattern', searchPattern);
-        this.searchPattern = searchPattern;
+        this.searchComponentData.searchPattern = searchPattern;
         this.go('search');
     };
     MemberComponent.prototype.searchOnEnter = function (event) {
@@ -47,10 +55,10 @@ var MemberComponent = (function () {
             this.search(event.target.value);
         }
     };
-    MemberComponent.prototype.visitUser = function (othersName) {
-        console.log('visit other!', othersName);
-        this.othersName = othersName;
-        this.view = "other";
+    MemberComponent.prototype.visitUser = function (profileUsername) {
+        console.log('visit other!', profileUsername);
+        this.profileComponentData.profileUsername = profileUsername;
+        this.go("other");
     };
     MemberComponent.prototype.signout = function () {
         this.authService.signout(this.username)

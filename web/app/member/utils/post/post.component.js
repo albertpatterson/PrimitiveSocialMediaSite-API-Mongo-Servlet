@@ -8,13 +8,18 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var core_1 = require("@angular/core");
 var PostComponent = (function () {
     function PostComponent() {
+        this.userSelect = new core_1.EventEmitter();
     }
+    PostComponent.prototype.selectUser = function (otherUsername) {
+        this.userSelect.next(otherUsername);
+    };
     return PostComponent;
 }());
 PostComponent = __decorate([
     core_1.Component({
         selector: "post",
         inputs: ["poster", "timestamp", "content"],
+        outputs: ["userSelect"],
         templateUrl: "./post.component.html",
         styleUrls: ['./../../member.component.css', "./post.component.css"]
     })

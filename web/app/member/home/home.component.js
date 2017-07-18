@@ -15,6 +15,7 @@ var HomeComponent = (function () {
     function HomeComponent(postService) {
         this.postService = postService;
         this.postFormVisible = true;
+        this.userSelect = new core_1.EventEmitter();
     }
     HomeComponent.prototype.ngOnInit = function () {
         this._updateFollowedPosts();
@@ -34,12 +35,16 @@ var HomeComponent = (function () {
             this.followedPosts = followedPosts;
         }.bind(this));
     };
+    HomeComponent.prototype.selectUser = function (otherUsername) {
+        this.userSelect.next(otherUsername);
+    };
     return HomeComponent;
 }());
 HomeComponent = __decorate([
     core_1.Component({
         selector: 'member-home',
         inputs: ['username'],
+        outputs: ['userSelect'],
         templateUrl: './home.component.html',
         styleUrls: ['./../member.component.css', './home.component.css'],
     }),

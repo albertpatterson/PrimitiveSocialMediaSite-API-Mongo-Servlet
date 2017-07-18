@@ -10,29 +10,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var personal_data_service_1 = require("./../services/personal-data.service");
-// import {SearchService} from './../services/mock_search.service';
-var router_1 = require("@angular/router");
-require("rxjs/add/operator/switchMap");
 var SearchComponent = (function () {
-    function SearchComponent(personalDataService, route) {
+    function SearchComponent(personalDataService) {
         this.personalDataService = personalDataService;
-        this.route = route;
         this.userSelect = new core_1.EventEmitter();
     }
     SearchComponent.prototype._selectUser = function (name) {
         console.log('selected ' + name);
         this.userSelect.next(name);
-    };
-    SearchComponent.prototype.ngOnInit = function () {
-        // this.route.params
-        // .switchMap(function(params: Params){
-        //     return this.searchService.search(params["pattern"]);     
-        // }.bind(this))
-        // console.log('searchpattern', this.searchPattern);
-        // this.searchService.search(this.searchPattern) 
-        // .then(function(users: User[]){
-        //     this.userGroups = this._toGrid(users,3);
-        // }.bind(this))   
     };
     SearchComponent.prototype.ngOnChanges = function () {
         console.log('searchpattern', this.searchPattern);
@@ -62,8 +47,7 @@ SearchComponent = __decorate([
             './search.component.css'
         ]
     }),
-    __metadata("design:paramtypes", [personal_data_service_1.PersonalDataService,
-        router_1.ActivatedRoute])
+    __metadata("design:paramtypes", [personal_data_service_1.PersonalDataService])
 ], SearchComponent);
 exports.SearchComponent = SearchComponent;
 //# sourceMappingURL=search.component.js.map
