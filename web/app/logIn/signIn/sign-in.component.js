@@ -10,9 +10,21 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var auth_service_1 = require("./../../services/auth.service");
+/**
+ * Component allowing users to sign into their existing account
+ *
+ * @export
+ * @class SignInComponent
+ */
 var SignInComponent = (function () {
     function SignInComponent(authService) {
         this.authService = authService;
+        /**
+         * event to be emitted when the user has signed in
+         *
+         * @type {EventEmitter<string>}
+         * @memberof SignInComponent
+         */
         this.signedInEvent = new core_1.EventEmitter();
         this.usernamePattern = "\\w{1,10}";
         this.usernameDiagnostic = "username must be alphanumeric and be between 1 and 10 characters";
@@ -22,14 +34,25 @@ var SignInComponent = (function () {
         this.invalidCredentialsBaseDiagnostic = "Invalid username and/or password!";
         this.invalidCredentialsDiagnostic = "";
     }
+    /**
+     * attempt to sign into a user's account
+     *
+     * @memberof SignInComponent
+     */
     SignInComponent.prototype.signIn = function () {
         var _this = this;
         console.log(" sign in " + this.username + " " + this.password);
         this.authService.tryLogin(this.username, this.password)
             .then(function () { return _this.signedInEvent.next(_this.username); })
-            .catch(this._handleLoginError.bind(this));
+            .catch(this._updateUserOfLoginError.bind(this));
     };
-    SignInComponent.prototype._handleLoginError = function (error) {
+    /**
+     * update the invalid login information shown to the user and reset password
+     *
+     * @param {*} error
+     * @memberof SignInComponent
+     */
+    SignInComponent.prototype._updateUserOfLoginError = function (error) {
         console.log('login err', error);
         this.invalidCredentials = true;
         this.password = '';

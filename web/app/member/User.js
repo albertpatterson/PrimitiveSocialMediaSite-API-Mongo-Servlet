@@ -1,4 +1,10 @@
 "use strict";
+/**
+ * personal data of a member
+ *
+ * @export
+ * @class User
+ */
 var User = (function () {
     function User() {
     }

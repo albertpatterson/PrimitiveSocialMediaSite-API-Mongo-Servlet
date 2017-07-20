@@ -14,14 +14,22 @@ var auth_service_1 = require("./../services/auth.service");
 // import { AuthService } from './../services/mock_auth.service';
 var message_service_1 = require("./services/message.service");
 // import {MessageService} from './services/mock_message.service';
+/**
+ * Component implementing the member area, including the following
+ * pages: home, messages, search, premium, profile
+ *
+ * @export
+ * @class MemberComponent
+ * @implements {OnInit}
+ */
 var MemberComponent = (function () {
     function MemberComponent(authService, router, messageService, activatedRoute) {
         this.authService = authService;
         this.router = router;
         this.messageService = messageService;
         this.activatedRoute = activatedRoute;
-        // current view 
-        this.view = "home";
+        // currently displayed page 
+        this.currentPage = "home";
         // data required by the search component
         this.searchComponentData = {
             searchPattern: ''
@@ -31,6 +39,12 @@ var MemberComponent = (function () {
             profileUsername: ''
         };
     }
+    /**
+     * update the count of the number of messages available
+     *
+     * @returns {Promise<any>}
+     * @memberof MemberComponent
+     */
     MemberComponent.prototype._setMessageCount = function () {
         console.log('get message count');
         return this.messageService.getMessageCount(this.username)
@@ -39,33 +53,58 @@ var MemberComponent = (function () {
             this.messageCount = messageCount;
         }.bind(this));
     };
-    MemberComponent.prototype.go = function (view) {
+    /**
+     * go to a particlar view/page in the member area
+     *
+     * @param {string} page - the page in the member area to display
+     * @memberof MemberComponent
+     */
+    MemberComponent.prototype.go = function (page) {
         this.authService.assertLoggedIn(this.username)
             .then(this._setMessageCount.bind(this))
             .catch(function (e) { return console.log(e); });
-        this.view = view;
+        this.currentPage = page;
     };
+    /**
+     * perform a search for other users
+     *
+     * @param {string} searchPattern - the search pattern to match usernames
+     * @memberof MemberComponent
+     */
     MemberComponent.prototype.search = function (searchPattern) {
         console.log('search searchPattern', searchPattern);
         this.searchComponentData.searchPattern = searchPattern;
         this.go('search');
     };
-    MemberComponent.prototype.searchOnEnter = function (event) {
-        if (event.key === "Enter") {
-            this.search(event.target.value);
-        }
-    };
-    MemberComponent.prototype.visitUser = function (profileUsername) {
+    /**
+     * go to a users profile
+     *
+     * @param {string} profileUsername - the username of the user whose profile
+     *    should be shown
+     * @memberof MemberComponent
+     */
+    MemberComponent.prototype.goProfile = function (profileUsername) {
         console.log('visit other!', profileUsername);
         this.profileComponentData.profileUsername = profileUsername;
-        this.go("other");
+        this.go("profile");
     };
+    /**
+     * sign out of the member area
+     *
+     * @memberof MemberComponent
+     */
     MemberComponent.prototype.signout = function () {
         this.authService.signout(this.username)
             .then(function (signedOut) {
             this.router.navigate(['/sign-in']);
         }.bind(this));
     };
+    /**
+     * set the username, assert the user is logged in and then set
+     * the message count on init
+     *
+     * @memberof MemberComponent
+     */
     MemberComponent.prototype.ngOnInit = function () {
         this.activatedRoute.params
             .subscribe(function (params) {

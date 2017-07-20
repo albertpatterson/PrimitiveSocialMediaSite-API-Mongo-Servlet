@@ -9,18 +9,47 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-// import {MemberComponent} from '../member.component';
 var post_service_1 = require("./../services/post.service");
+/**
+ * Component showing the member's home page, allowing the to
+ * view followed posts and add new ones
+ *
+ * @export
+ * @class HomeComponent
+ * @implements {OnInit}
+ */
 var HomeComponent = (function () {
+    /**
+     * Creates an instance of HomeComponent.
+     * @param {PostService} postService
+     * @memberof HomeComponent
+     */
     function HomeComponent(postService) {
         this.postService = postService;
-        this.postFormVisible = true;
+        /**
+         * event to be emitted when a user is selected from the followed posts
+         *
+         * @type {EventEmitter<string>}
+         * @memberof HomeComponent
+         */
         this.userSelect = new core_1.EventEmitter();
+        this.postFormVisible = true;
     }
+    /**
+     * update the list of followed posts on init
+     *
+     * @memberof HomeComponent
+     */
     HomeComponent.prototype.ngOnInit = function () {
         this._updateFollowedPosts();
         console.log('home', this.username);
     };
+    /**
+     * add a new post
+     *
+     * @param {string} postContent
+     * @memberof HomeComponent
+     */
     HomeComponent.prototype.addPost = function (postContent) {
         this.postService.addPost(this.username, postContent)
             .then(function () {
@@ -28,6 +57,12 @@ var HomeComponent = (function () {
             return this._updateFollowedPosts();
         }.bind(this));
     };
+    /**
+     * update the list of followed posts
+     *
+     * @returns {Promise<Post[]>}
+     * @memberof HomeComponent
+     */
     HomeComponent.prototype._updateFollowedPosts = function () {
         return this.postService.getFollowedPosts(this.username)
             .then(function (followedPosts) {
@@ -35,6 +70,12 @@ var HomeComponent = (function () {
             this.followedPosts = followedPosts;
         }.bind(this));
     };
+    /**
+     * select a user from the list of posts and emit the userSelect event
+     *
+     * @param {string} otherUsername
+     * @memberof HomeComponent
+     */
     HomeComponent.prototype.selectUser = function (otherUsername) {
         this.userSelect.next(otherUsername);
     };

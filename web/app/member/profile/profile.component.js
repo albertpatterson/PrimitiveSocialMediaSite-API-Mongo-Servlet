@@ -9,58 +9,82 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-// import { SearchService } from '../services/search.service';
-// import { SearchService } from '../services/mock_search.service';
 var personal_data_service_1 = require("./../services/personal-data.service");
 var post_service_1 = require("../services/post.service");
-// import {PostService} from './../services/mock_post.service';
 var message_service_1 = require("./../services/message.service");
-// import {MessageService} from './../services/mock_message.service';
 var subscription_service_1 = require("./../services/subscription.service");
-var OtherComponent = (function () {
-    function OtherComponent(personalDataService, postService, messageService, subscriptionService) {
+/**
+ * Component that displays a user's profile
+ *
+ * @export
+ * @class ProfileComponent
+ * @implements {OnInit}
+ */
+var ProfileComponent = (function () {
+    /**
+     * Creates an instance of ProfileComponent.
+     * @param {PersonalDataService} personalDataService
+     * @param {PostService} postService
+     * @param {MessageService} messageService
+     * @param {SubscriptionService} subscriptionService
+     * @memberof ProfileComponent
+     */
+    function ProfileComponent(personalDataService, postService, messageService, subscriptionService) {
         this.personalDataService = personalDataService;
         this.postService = postService;
         this.messageService = messageService;
         this.subscriptionService = subscriptionService;
     }
-    OtherComponent.prototype.ngOnInit = function () {
-        //    this.activatedRoute.params 
-        //     .switchMap(function(params: Params){
-        //         return this.searchService.search(`^${params["othersName"]}$`);     
-        //     }.bind(this))
+    /**
+     * get the personal data and posts of the profiled user in init
+     *
+     * @memberof ProfileComponent
+     */
+    ProfileComponent.prototype.ngOnInit = function () {
         console.log('otherName', this.profileUsername);
         this.personalDataService.getUserData(this.username, this.profileUsername)
-            .then(function (user) {
-            this.user = user;
-            this.postService.getOwnPosts(this.username, this.user.name)
-                .then(function (ownPosts) {
-                this.ownPosts = ownPosts;
+            .then(function (profileUserData) {
+            this.profileUserData = profileUserData;
+            this.postService.getOwnPosts(this.username, this.profileUsername)
+                .then(function (profilePosts) {
+                this.profilePosts = profilePosts;
             }.bind(this));
         }.bind(this));
     };
-    OtherComponent.prototype.sendMessage = function (message) {
+    /**
+     * send a message to the profiled user
+     *
+     * @param {string} message - the content of the message to send
+     * @memberof ProfileComponent
+     */
+    ProfileComponent.prototype.sendMessage = function (message) {
         alert(message);
         this.messageService.addMessage(this.username, message, this.profileUsername)
             .then(function () { return alert("Message Sent!"); });
     };
-    OtherComponent.prototype.subscribe = function () {
-        this.subscriptionService.addSubscription(this.username, this.user.name)
+    /**
+     * subscribe to posts by this user
+     *
+     * @private
+     * @memberof ProfileComponent
+     */
+    ProfileComponent.prototype.subscribe = function () {
+        this.subscriptionService.addSubscription(this.username, this.profileUsername)
             .then(function () { return alert("Subscribed!"); });
     };
-    return OtherComponent;
+    return ProfileComponent;
 }());
-OtherComponent = __decorate([
+ProfileComponent = __decorate([
     core_1.Component({
-        selector: 'member-other',
+        selector: 'member-profile',
         inputs: ['username', 'profileUsername'],
-        templateUrl: './other.component.html',
-        styleUrls: ['./../member.component.css', './other.component.css']
+        templateUrl: './profile.component.html',
+        styleUrls: ['./../member.component.css', './profile.component.css']
     }),
     __metadata("design:paramtypes", [personal_data_service_1.PersonalDataService,
         post_service_1.PostService,
         message_service_1.MessageService,
         subscription_service_1.SubscriptionService])
-], OtherComponent);
-exports.OtherComponent = OtherComponent;
-//# sourceMappingURL=other.component.js.map
+], ProfileComponent);
+exports.ProfileComponent = ProfileComponent;
+//# sourceMappingURL=profile.component.js.map

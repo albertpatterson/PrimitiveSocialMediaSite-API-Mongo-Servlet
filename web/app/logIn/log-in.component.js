@@ -10,10 +10,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
+/**
+ * Component showing the log-in and sign-up forms, which routes the user to their home page after signing in
+ *
+ * @export
+ * @class LogInComponent
+ */
 var LogInComponent = (function () {
     function LogInComponent(router) {
         this.router = router;
     }
+    // navigate the user to their home page
     LogInComponent.prototype.goHome = function (username) {
         console.log("go home " + username);
         this.router.navigate(["member", username]);

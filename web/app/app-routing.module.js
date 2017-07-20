@@ -10,7 +10,9 @@ var router_1 = require("@angular/router");
 // import {SignInComponent} from './signIn/sign-in.component';
 var log_in_component_1 = require("./logIn/log-in.component");
 var not_found_component_1 = require("./not-found.component");
+var member_component_1 = require("./member/member.component");
 var routes = [
+    { path: 'member/:ownName', component: member_component_1.MemberComponent },
     { path: 'sign-in', component: log_in_component_1.LogInComponent },
     { path: '', redirectTo: '/sign-in', pathMatch: 'full' },
     { path: '**', component: not_found_component_1.NotFoundComponent }

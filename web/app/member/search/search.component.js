@@ -10,15 +10,44 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var personal_data_service_1 = require("./../services/personal-data.service");
+/**
+ * Component for searching for members on the site
+ *
+ * @export
+ * @class SearchComponent
+ * @implements {OnChanges}
+ */
 var SearchComponent = (function () {
+    /**
+     * Creates an instance of SearchComponent.
+     * @param {PersonalDataService} personalDataService
+     * @memberof SearchComponent
+     */
     function SearchComponent(personalDataService) {
         this.personalDataService = personalDataService;
+        /**
+         * event to be emitted when a user is selected from the search results
+         *
+         * @type {EventEmitter<string>}
+         * @memberof SearchComponent
+         */
         this.userSelect = new core_1.EventEmitter();
     }
+    /**
+     * select a user from the search results
+     *
+     * @param {string} name - the username of the selected user
+     * @memberof SearchComponent
+     */
     SearchComponent.prototype._selectUser = function (name) {
         console.log('selected ' + name);
         this.userSelect.next(name);
     };
+    /**
+     * search for users that match the search pattern on changes to the page
+     *
+     * @memberof SearchComponent
+     */
     SearchComponent.prototype.ngOnChanges = function () {
         console.log('searchpattern', this.searchPattern);
         this.personalDataService.searchUserData(this.username, this.searchPattern)
@@ -26,6 +55,14 @@ var SearchComponent = (function () {
             this.userGroups = this._toGrid(users, 3);
         }.bind(this));
     };
+    /**
+     * convert the array of search results to a grid
+     *
+     * @param {any[]} items - the items in the grid
+     * @param {number} nCols - numbe of columns of the grid
+     * @returns
+     * @memberof SearchComponent
+     */
     SearchComponent.prototype._toGrid = function (items, nCols) {
         var grid = [];
         var max = nCols * Math.ceil(items.length / nCols);

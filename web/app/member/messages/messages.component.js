@@ -10,10 +10,26 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var message_service_1 = require("./../services/message.service");
+/**
+ * Component used to display messages
+ *
+ * @export
+ * @class MessagesComponent
+ */
 var MessagesComponent = (function () {
+    /**
+     * Creates an instance of MessagesComponent.
+     * @param {MessageService} messageService
+     * @memberof MessagesComponent
+     */
     function MessagesComponent(messageService) {
         this.messageService = messageService;
     }
+    /**
+     * update the messages on init
+     *
+     * @memberof MessagesComponent
+     */
     MessagesComponent.prototype.ngOnInit = function () {
         this.messageService.getMessages(this.username)
             .then(function (messages) {

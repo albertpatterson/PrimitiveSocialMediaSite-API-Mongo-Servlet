@@ -1,22 +1,15 @@
 <div id="postItemRow" class="row">
+    
     <div class = col-sm-12>
-        <button id="addContent" class="btn btn-primary centered" data-toggle="collapse" data-target="#postFormContainer">New Post</button>
-        <div id="postFormContainer" class="collapse">
-            <!--<form class="form-group" #postForm="ngForm" (ngSubmit)="addPost()">
-                <label for="postContainer">Post:</label>
-                <input  type="text" 
-                        class="form-control" 
-                        [(ngModel)]="postContent"
-                        name="postContent" 
-                        id="postContainer"
-                        rows="5" 
-                        required 
-                        #postContents="ngModel">
-                <button type="submit" 
-                        id="submitPost" 
-                        class="btn btn-primary centered" 
-                        [disabled]="!postForm.valid">Submit</button>
-            </form>-->
+    
+        <button id="addContent" 
+                class="btn btn-primary centered" 
+                data-toggle="collapse" 
+                data-target="#postFormContainer">New Post</button>
+    
+        <div    id="postFormContainer" 
+                class="collapse">
+    
             <div class="large centered">
                 <message-form   rows="10" 
                                 label="Posts"
@@ -25,19 +18,18 @@
         </div>
     </div>
 </div>
+
 <div *ngIf="!followedPosts">
 Loading...
 </div>
-<div class="posts">
-    <div *ngFor="let post of followedPosts">
-        <post [poster]="post.poster" [timestamp]="post.timestamp" [content]="post.content" (userSelect)="selectUser($event)"></post>
 
-        <!--<div class="col-xs-12">
-            <br>
-            <div class="postContainer">
-                <p class="posterName">{{post.poster}}</p>
-                <p class="posterContent">{{post.content}}</p>
-            </div>
-        </div>-->
+<div class="posts">
+
+    <div *ngFor="let post of followedPosts">
+
+        <post   [poster]="post.poster" 
+                [timestamp]="post.timestamp" 
+                [content]="post.content" 
+                (userSelect)="selectUser($event)"></post>
     </div>
 </div>

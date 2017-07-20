@@ -1,12 +1,14 @@
 <div *ngIf="!userGroups">
 Loading...
 </div>
-<div *ngFor="let userGroup of userGroups" class="row">
+<div    *ngFor="let userGroup of userGroups" 
+        class="row">
     <div *ngFor="let user of userGroup">
         <div class="col-sm-2 overflowHidden">
-            <!--<a routerLink="../../other/{{user.name}}">-->
             <a (click)="_selectUser(user.name)">
-                <img src="{{user.picture}}" alt="{{user.name}}'s photo'" class="fullsize centered">
+                <img    src="{{user.picture}}" 
+                        alt="{{user.name}}'s photo'" 
+                        class="fullsize centered">
             </a>
         </div>
         <div class="col-sm-2">
