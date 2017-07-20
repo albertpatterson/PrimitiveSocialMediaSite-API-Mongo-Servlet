@@ -28,3 +28,6 @@ out/
 
 # node_modules
 web/node_modules
+
+# junk
+web/JUNK
