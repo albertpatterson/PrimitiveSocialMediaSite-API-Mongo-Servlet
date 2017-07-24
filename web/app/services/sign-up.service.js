@@ -13,12 +13,42 @@ var http_1 = require("@angular/http");
 require("rxjs/add/operator/toPromise");
 var handleResponse_1 = require("../utils/handleResponse");
 var auth_service_1 = require("./auth.service");
+/**
+ * Service that allows new users to sign up for an account
+ *
+ * @export
+ * @class SignUpService
+ */
 var SignUpService = (function () {
+    /**
+     * Creates an instance of SignUpService.
+     * @param {Http} http
+     * @param {AuthService} authService
+     * @memberof SignUpService
+     */
     function SignUpService(http, authService) {
         this.http = http;
         this.authService = authService;
+        /**
+         * the url of the signUp resource
+         *
+         * @private
+         * @memberof SignUpService
+         */
         this._signUpUrl = '/signUp';
     }
+    /**
+     * sign up for a member account and automatically sign in if successful
+     *
+     * @param {string} username - unique name of the user
+     * @param {string} location - current location of the user
+     * @param {string} DOB - the user's date of birth
+     * @param {string} business - the business the user works in
+     * @param {*} picture - the user's picture
+     * @param {string} password - the user's password
+     * @returns {Promise<{}>}
+     * @memberof SignUpService
+     */
     SignUpService.prototype.signUp = function (username, location, DOB, business, picture, password) {
         var _this = this;
         console.log('send sign up request');

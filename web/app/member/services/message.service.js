@@ -12,14 +12,46 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 var handleResponse_1 = require("../../utils/handleResponse");
 require("rxjs/add/operator/toPromise");
+/**
+ * Service providing a user to access to messages
+ *
+ * @export
+ * @class MessageService
+ */
 var MessageService = (function () {
+    /**
+     * Creates an instance of MessageService.
+     * @param {Http} http
+     * @memberof MessageService
+     */
     function MessageService(http) {
         this.http = http;
+        /**
+         * url providing access to the message resource
+         *
+         * @private
+         * @type {string}
+         * @memberof MessageService
+         */
         this._messageUrl = "/message";
     }
+    /**
+     * get the number of message available to a user
+     *
+     * @param {string} username
+     * @returns {Promise<number>}
+     * @memberof MessageService
+     */
     MessageService.prototype.getMessageCount = function (username) {
         return this.getMessages(username).then(function (ms) { return ms.length; });
     };
+    /**
+     * get the messages available to a user
+     *
+     * @param {string} username
+     * @returns {Promise<Post[]>}
+     * @memberof MessageService
+     */
     MessageService.prototype.getMessages = function (username) {
         var _this = this;
         return new Promise(function (res, rej) {
@@ -32,6 +64,15 @@ var MessageService = (function () {
                 .catch(function (err) { return handleResponse_1.handleError(rej, err); });
         });
     };
+    /**
+     * send a new message from a user to another user
+     *
+     * @param {string} username - the name of the user sending the message
+     * @param {string} content - the content of the message
+     * @param {string} recipient - the recipient of the message
+     * @returns {Promise<{}>}
+     * @memberof MessageService
+     */
     MessageService.prototype.addMessage = function (username, content, recipient) {
         var _this = this;
         console.log('add post', username, content);
@@ -46,6 +87,14 @@ var MessageService = (function () {
                 .catch(function (err) { return handleResponse_1.handleError(rej, err); });
         });
     };
+    /**
+     * delete a message
+     *
+     * @param {string} username - the name of the user whose message should be deleted
+     * @param {number} idx - the index of the message to delete
+     * @returns {Promise<{}>}
+     * @memberof MessageService
+     */
     MessageService.prototype.deleteMessage = function (username, idx) {
         var _this = this;
         return new Promise(function (res, rej) {

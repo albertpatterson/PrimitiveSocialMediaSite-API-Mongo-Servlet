@@ -33,7 +33,6 @@ var HomeComponent = (function () {
          * @memberof HomeComponent
          */
         this.userSelect = new core_1.EventEmitter();
-        this.postFormVisible = true;
     }
     /**
      * update the list of followed posts on init

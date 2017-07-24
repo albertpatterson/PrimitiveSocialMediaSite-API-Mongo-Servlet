@@ -12,17 +12,60 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 var handleResponse_1 = require("../../utils/handleResponse");
 require("rxjs/add/operator/toPromise");
+/**
+ * Service providing a user access to posts
+ *
+ * @export
+ * @class PostService
+ */
 var PostService = (function () {
+    /**
+     * Creates an instance of PostService.
+     * @param {Http} http
+     * @memberof PostService
+     */
     function PostService(http) {
         this.http = http;
+        /**
+         * url of the post resource
+         *
+         * @private
+         * @type {string}
+         * @memberof PostService
+         */
         this._postUrl = "/post";
     }
+    /**
+     * get the posts followed by a user
+     *
+     * @param {string} username
+     * @returns {Promise<Post[]>}
+     * @memberof PostService
+     */
     PostService.prototype.getFollowedPosts = function (username) {
         return this._getPosts(username, username, "followed");
     };
+    /**
+     * get the posts created by a user
+     *
+     * @param {string} username
+     * @param {string} poster
+     * @returns {Promise<Post[]>}
+     * @memberof PostService
+     */
     PostService.prototype.getOwnPosts = function (username, poster) {
         return this._getPosts(username, poster, "own");
     };
+    /**
+     * get various types of posts
+     *
+     * @private
+     * @param {string} username
+     * @param {string} poster
+     * @param {string} type - the type of posts ("followed" or "own")
+     * @returns {Promise<Post[]>}
+     * @memberof PostService
+     */
     PostService.prototype._getPosts = function (username, poster, type) {
         var _this = this;
         return new Promise(function (res, rej) {
@@ -37,7 +80,14 @@ var PostService = (function () {
                 .catch(function (err) { return handleResponse_1.handleError(rej, err); });
         });
     };
-    // }
+    /**
+     * add a new post
+     *
+     * @param {string} username
+     * @param {string} content
+     * @returns {Promise<{}>}
+     * @memberof PostService
+     */
     PostService.prototype.addPost = function (username, content) {
         var _this = this;
         console.log('add post', username, content);
@@ -51,6 +101,14 @@ var PostService = (function () {
                 .catch(function (err) { return handleResponse_1.handleError(rej, err); });
         });
     };
+    /**
+     * delete a post
+     *
+     * @param {string} username
+     * @param {number} idx - index of the post to delete
+     * @returns {Promise<{}>}
+     * @memberof PostService
+     */
     PostService.prototype.deletePost = function (username, idx) {
         var _this = this;
         return new Promise(function (res, rej) {

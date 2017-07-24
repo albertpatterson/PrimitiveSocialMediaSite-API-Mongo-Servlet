@@ -24,6 +24,13 @@ var MessagesComponent = (function () {
      */
     function MessagesComponent(messageService) {
         this.messageService = messageService;
+        /**
+         * event emitted when a user is selected from the messages component
+         *
+         * @private
+         * @type {EventEmitter<string>}
+         * @memberof MessagesComponent
+         */
         this.userSelect = new core_1.EventEmitter();
     }
     /**

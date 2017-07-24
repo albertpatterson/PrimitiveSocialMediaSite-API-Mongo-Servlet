@@ -10,10 +10,27 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var premium_service_1 = require("./../services/premium.service");
+/**
+ * Component providing viewing and purchase of premium content
+ *
+ * @export
+ * @class PremiumComponent
+ * @implements {OnInit}
+ */
 var PremiumComponent = (function () {
+    /**
+     * Creates an instance of PremiumComponent.
+     * @param {PremiumService} premiumService
+     * @memberof PremiumComponent
+     */
     function PremiumComponent(premiumService) {
         this.premiumService = premiumService;
     }
+    /**
+     * get the user's premium content and populate the grid on init
+     *
+     * @memberof PremiumComponent
+     */
     PremiumComponent.prototype.ngOnInit = function () {
         this.premiumService.getPremium(this.username)
             .then(function (premiumItems) {
@@ -21,9 +38,22 @@ var PremiumComponent = (function () {
             this.premiumGroups = this._toGrid(premiumStrings, 3);
         }.bind(this));
     };
+    /**
+     * submit for to purchase premium content. todo: wire up form
+     *
+     * @memberof PremiumComponent
+     */
     PremiumComponent.prototype.onSubmit = function () {
         console.log('submitted!');
     };
+    /**
+     * create a grid
+     *
+     * @param {any[]} items
+     * @param {number} nCols
+     * @returns
+     * @memberof PremiumComponent
+     */
     PremiumComponent.prototype._toGrid = function (items, nCols) {
         var grid = [];
         var max = nCols * Math.ceil(items.length / nCols);

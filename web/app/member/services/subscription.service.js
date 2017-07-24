@@ -12,23 +12,56 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 var handleResponse_1 = require("../../utils/handleResponse");
 require("rxjs/add/operator/toPromise");
+/**
+ * Service providing access to subscriptions
+ *
+ * @export
+ * @class SubscriptionService
+ */
 var SubscriptionService = (function () {
+    /**
+     * Creates an instance of SubscriptionService.
+     * @param {Http} http
+     * @memberof SubscriptionService
+     */
     function SubscriptionService(http) {
         this.http = http;
+        /**
+         * url of the subscription resource
+         *
+         * @private
+         * @type {string}
+         * @memberof SubscriptionService
+         */
         this._subscriptionUrl = "/subscription";
     }
+    /**
+     * get the list of users followed by the current user
+     *
+     * @param {string} username
+     * @returns {Promise<String[]>}
+     * @memberof SubscriptionService
+     */
     SubscriptionService.prototype.getSubscriptions = function (username) {
         var _this = this;
         return new Promise(function (res, rej) {
             var data = new http_1.URLSearchParams();
             data.append('username', username);
             var resolver = function (resp) { return res(resp.json().data); };
-            _this.http.get(_this._subscriptionUrl, data)
+            _this.http.get(_this._subscriptionUrl, { search: data })
                 .toPromise()
                 .then(function (resp) { return handleResponse_1.assertStatus(resolver, resp, 204, "Could not get subscriptions."); })
                 .catch(function (err) { return handleResponse_1.handleError(rej, err); });
         });
     };
+    /**
+     * follow a user
+     *
+     * @param {string} username
+     * @param {string} followee
+     * @returns {Promise<{}>}
+     * @memberof SubscriptionService
+     */
     SubscriptionService.prototype.addSubscription = function (username, followee) {
         var _this = this;
         return new Promise(function (res, rej) {
@@ -41,6 +74,14 @@ var SubscriptionService = (function () {
                 .catch(function (err) { return handleResponse_1.handleError(rej, err); });
         });
     };
+    /**
+     * unfollow a user
+     *
+     * @param {string} username
+     * @param {string} followee
+     * @returns {Promise<{}>}
+     * @memberof SubscriptionService
+     */
     SubscriptionService.prototype.deleteSubscription = function (username, followee) {
         var _this = this;
         return new Promise(function (res, rej) {

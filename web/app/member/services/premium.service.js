@@ -12,11 +12,35 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 var handleResponse_1 = require("../../utils/handleResponse");
 require("rxjs/add/operator/toPromise");
+/**
+ * Service providing access to premium content
+ *
+ * @export
+ * @class PremiumService
+ */
 var PremiumService = (function () {
+    /**
+     * Creates an instance of PremiumService.
+     * @param {Http} http
+     * @memberof PremiumService
+     */
     function PremiumService(http) {
         this.http = http;
+        /**
+         * url of the premium resource
+         *
+         * @private
+         * @memberof PremiumService
+         */
         this._premiumUrl = "/premium";
     }
+    /**
+     * get the premium items purchased by a user
+     *
+     * @param {string} username
+     * @returns {Promise<string>}
+     * @memberof PremiumService
+     */
     PremiumService.prototype.getPremium = function (username) {
         var _this = this;
         return new Promise(function (res, rej) {
@@ -29,6 +53,14 @@ var PremiumService = (function () {
                 .catch(function (err) { return handleResponse_1.handleError(rej, err); });
         });
     };
+    /**
+     * purchase a new premium item
+     *
+     * @param {string} username
+     * @param {string} content
+     * @returns {Promise<{}>}
+     * @memberof PremiumService
+     */
     PremiumService.prototype.addPremium = function (username, content) {
         var _this = this;
         return new Promise(function (res, rej) {
@@ -42,6 +74,14 @@ var PremiumService = (function () {
                 .catch(function (err) { return handleResponse_1.handleError(rej, err); });
         });
     };
+    /**
+     * delete a premium item
+     *
+     * @param {string} username
+     * @param {number} index - index of the item to remove
+     * @returns {Promise<{}>}
+     * @memberof PremiumService
+     */
     PremiumService.prototype.deletePremium = function (username, index) {
         var _this = this;
         return new Promise(function (res, rej) {

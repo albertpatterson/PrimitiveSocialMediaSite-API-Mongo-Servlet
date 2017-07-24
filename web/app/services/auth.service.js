@@ -16,12 +16,39 @@ require("rxjs/add/operator/catch");
 require("rxjs/add/operator/map");
 require("rxjs/add/observable/throw");
 var handleResponse_1 = require("../utils/handleResponse");
+/**
+ * Service used to authenticate users and provide access to the members area
+ *
+ * @export
+ * @class AuthService
+ */
 var AuthService = (function () {
+    /**
+     * Creates an instance of AuthService.
+     * @param {Http} http
+     * @param {Router} router
+     * @memberof AuthService
+     */
     function AuthService(http, router) {
         this.http = http;
         this.router = router;
+        /**
+         * url providing access to the session resource
+         *
+         * @private
+         * @type {string}
+         * @memberof AuthService
+         */
         this._loginUrl = "/session";
     }
+    /**
+     * attempt to log in
+     *
+     * @param {string} username
+     * @param {string} password
+     * @returns {Promise<{}>}
+     * @memberof AuthService
+     */
     AuthService.prototype.tryLogin = function (username, password) {
         var _this = this;
         var data = new http_1.URLSearchParams();
@@ -33,17 +60,15 @@ var AuthService = (function () {
                 .then(function (resp) { return handleResponse_1.assertStatus(res, resp, 201, "Sign-in failed"); })
                 .catch(function (err) { return handleResponse_1.handleError(rej, err); });
         });
-        // return new Observable((o:any)=>o.next(true))
-        // return   this.http.post(this._loginUrl, data)
-        //         .map(this._checkStatus)
-        //         .catch(this._handleError)
     };
-    AuthService.prototype.trySignup = function (username, password) {
-        return Promise.resolve(username === "false");
-    };
+    /**
+     * assert that a user is logged with a valid session in and redirect to the log in page if not
+     *
+     * @param {string} username
+     * @returns {Promise<boolean>}
+     * @memberof AuthService
+     */
     AuthService.prototype.assertLoggedIn = function (username) {
-        // alert('checking login');
-        // send a request to check session status
         console.log("check session " + username);
         var data = new http_1.URLSearchParams();
         data.append('username', username);
@@ -55,20 +80,14 @@ var AuthService = (function () {
                 .then(function (resp) { return handleResponse_1.assertStatus(res, resp, 200, "invalid session"); })
                 .catch(function (err) { return handleResponse_1.handleError(rejector, err); });
         }.bind(this));
-        // this.http.get(this._loginUrl, data)
-        // .map(this._checkStatus)
-        // .catch(this._handleError)
-        // new Observable((o:any)=>o.next(username==="member"))
-        // .subscribe(function(isLoggedIn:boolean){
-        //     if(isLoggedIn){
-        //         res();
-        //     }else{
-        //         this.router.navigate(['/sign-in'])
-        //         rej("Not logged in. Navigated to sign-in.");
-        //     }
-        // }.bind(this))
-        // }.bind(this))
     };
+    /**
+     * sign out and delete the user's session
+     *
+     * @param {string} username
+     * @returns {Promise<any>}
+     * @memberof AuthService
+     */
     AuthService.prototype.signout = function (username) {
         console.log("delete session " + username);
         var data = new http_1.URLSearchParams();
