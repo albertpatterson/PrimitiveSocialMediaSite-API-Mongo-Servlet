@@ -65,36 +65,53 @@ public class MockDatabaseService extends DatabaseService{
             String mockUserName = mockUserNames.get(idx);
 
             try {
+
+                // add activity by user
+                // add post by user
                 addPost(mockUserName, new Post(mockUserName, "Post 1"));
                 addPost(mockUserName, new Post(mockUserName, "Post 2"));
-
-                addMessage(mockUserName, new Post("friend1", "Post 1"));
-                addMessage(mockUserName, new Post("friend2", "Post 2"));
-
+                // add premium by user
                 addPremium(mockUserName, new PremiumContent(MockUserData.imageInc()));
                 addPremium(mockUserName, new PremiumContent(MockUserData.imageInc()));
 
+                // add activity by friends (the next 2 users)
 
-                int start = (idx + 1) % mockUserNames.size();
-                ArrayList<String> followedBy = new ArrayList<>(2);
-                followedBy.add(mockUserNames.get(start++));
-                start = (start + 1) % mockUserNames.size();
-                followedBy.add(mockUserNames.get(start));
+//                addMessage(mockUserName, new Post("friend1", "Post 1"));
+//                addMessage(mockUserName, new Post("friend2", "Post 2"));
 
-                ArrayList<String> following = new ArrayList<>(2);
+                int friendIdx;
+                int nFriends = 2;
+                String friendName;
+//                ArrayList<String> following = new ArrayList<>(2);
+                for(int friendOffset = 1; friendOffset<=nFriends; friendOffset++){
+                    friendIdx = (idx + friendOffset) % mockUserNames.size();
+                    friendName = mockUserNames.get(friendIdx);
+                    addMessage(mockUserName, new Post(friendName, "Post from friend"));
+                    addSubscription(mockUserName, friendName);
+                }
 
-                start = (start + 1) % mockUserNames.size();
-                following.add(mockUserNames.get(start));
-                start = (start + 1) % mockUserNames.size();
-                following.add(mockUserNames.get(start));
+//                int start = (idx + 1) % mockUserNames.size();
 
-                following.forEach(followee -> {
-                    try {
-                        addSubscription(mockUserName, followee);
-                    } catch (UserNotExistsException e) {
-                        e.printStackTrace();
-                    }
-                });
+
+//                followedBy.add(mockUserNames.get(start++));
+
+//                start = (start + 1) % mockUserNames.size();
+//                followedBy.add(mockUserNames.get(start));
+
+//                ArrayList<String> following = new ArrayList<>(2);
+
+//                start = (start + 1) % mockUserNames.size();
+//                following.add(mockUserNames.get(start));
+//                start = (start + 1) % mockUserNames.size();
+//                following.add(mockUserNames.get(start));
+
+//                following.forEach(followee -> {
+//                    try {
+//                        addSubscription(mockUserName, followee);
+//                    } catch (UserNotExistsException e) {
+//                        e.printStackTrace();
+//                    }
+//                });
 
             } catch (UserNotExistsException e) {
                 e.printStackTrace();
@@ -106,7 +123,7 @@ public class MockDatabaseService extends DatabaseService{
 
     @Override
     public void close() {
-        userData = null;
+        userData = new HashMap<>();
     }
 
     public void addUser(String username, PersonalData personalData, String password){

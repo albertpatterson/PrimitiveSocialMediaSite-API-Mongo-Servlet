@@ -24,6 +24,7 @@ var MessagesComponent = (function () {
      */
     function MessagesComponent(messageService) {
         this.messageService = messageService;
+        this.userSelect = new core_1.EventEmitter();
     }
     /**
      * update the messages on init
@@ -36,12 +37,16 @@ var MessagesComponent = (function () {
             this.messages = messages;
         }.bind(this));
     };
+    MessagesComponent.prototype.selectUser = function (selectedUserName) {
+        this.userSelect.next(selectedUserName);
+    };
     return MessagesComponent;
 }());
 MessagesComponent = __decorate([
     core_1.Component({
         selector: 'member-messages',
         inputs: ['username'],
+        outputs: ['userSelect'],
         templateUrl: './messages.component.html',
         styleUrls: [
             './../member.component.css',

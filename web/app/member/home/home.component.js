@@ -76,8 +76,8 @@ var HomeComponent = (function () {
      * @param {string} otherUsername
      * @memberof HomeComponent
      */
-    HomeComponent.prototype.selectUser = function (otherUsername) {
-        this.userSelect.next(otherUsername);
+    HomeComponent.prototype.selectUser = function (selectedUserName) {
+        this.userSelect.next(selectedUserName);
     };
     return HomeComponent;
 }());

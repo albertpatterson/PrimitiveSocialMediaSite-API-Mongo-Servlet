@@ -8,6 +8,7 @@ import com.primitive_social_media.database.MockDatabaseService;
 import com.primitive_social_media.exception.InvalidDataException;
 import com.primitive_social_media.exception.UserNotExistsException;
 import junit.framework.TestCase;
+import org.junit.After;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -19,11 +20,17 @@ import static org.junit.Assert.assertEquals;
 /**
  * Created by apatters on 6/19/2017.
  */
-public class MockDatabaseServiceTest extends TestCase{
+public class MockDatabaseServiceTest{
 
     private MockDatabaseService mockDatabaseService = MockDatabaseService.getInstance();
 
 
+    @After
+    public void close(){
+        mockDatabaseService.close();
+    }
+
+    @Test
     public void testAddUser(){
 
 
@@ -37,7 +44,7 @@ public class MockDatabaseServiceTest extends TestCase{
         assertEquals(updatedUsers.get(newUser.personalData.name).name, newUser.personalData.name);
     }
 
-
+    @Test
     public void testDeleteUser() throws UserNotExistsException {
 
         UserData newUser = addNewUser();
@@ -48,7 +55,7 @@ public class MockDatabaseServiceTest extends TestCase{
         assertEquals(mockDatabaseService.userData.size(), 0);
     }
 
-
+    @Test
     public void testFindUser() throws UserNotExistsException {
         UserData newUser = addNewUser();
         String username = newUser.personalData.name;
@@ -57,7 +64,7 @@ public class MockDatabaseServiceTest extends TestCase{
         assertEquals(personalData.name, username);
     }
 
-
+    @Test
     public void testFindUserMultiple(){
         addNewUser("Anne");
         addNewUser("Bill");
@@ -67,20 +74,20 @@ public class MockDatabaseServiceTest extends TestCase{
         assertEquals(personalData.size(), 2);
     }
 
-
+    @Test
     public void testSetPersonalData() throws UserNotExistsException {
         UserData newUser = addNewUser();
         String username = newUser.personalData.name;
         String location = newUser.personalData.location;
 
-        PersonalData newPersonalData = new PersonalData(username, "junk", "01/02/2000", "d", "e");
+        PersonalData newPersonalData = new PersonalData(username, "junk", "2000-01-02", "d", "e");
         assertNotEquals(mockDatabaseService.findPersonalData(username).location, newPersonalData.location);
 
         mockDatabaseService.setPersonalData(username, newPersonalData);
         assertEquals(mockDatabaseService.findPersonalData(username).location, newPersonalData.location);
     }
 
-
+    @Test
     public void testGetPassword() throws UserNotExistsException {
         UserData newUser = addNewUser();
         String username = newUser.personalData.name;
@@ -88,7 +95,7 @@ public class MockDatabaseServiceTest extends TestCase{
         assertEquals(mockDatabaseService.getPassword(username), password);
     }
 
-
+    @Test
     public void testSetPassword() throws UserNotExistsException {
         UserData newUser = addNewUser();
         String username = newUser.personalData.name;
@@ -98,7 +105,7 @@ public class MockDatabaseServiceTest extends TestCase{
         assertEquals(mockDatabaseService.getPassword(username), newPassword);
     }
 
-
+    @Test
     public void testAddAndGetPost() throws UserNotExistsException {
         UserData newUser = addNewUser();
         String username = newUser.personalData.name;
@@ -112,7 +119,7 @@ public class MockDatabaseServiceTest extends TestCase{
         assertEquals(ownPosts.get(0).content, newPost.content);
     }
 
-
+    @Test
     public void testDeletetPost() throws UserNotExistsException, InvalidDataException {
         UserData newUser = addNewUser();
         String username = newUser.personalData.name;
@@ -124,7 +131,7 @@ public class MockDatabaseServiceTest extends TestCase{
         assertEquals(mockDatabaseService.getOwnPosts(username).size(), 0);
     }
 
-
+    @Test
     public void testFollowUnfollowUserAndGetFollowedPosts() throws UserNotExistsException {
         UserData anne = addNewUser("Anne");
         String anneName = anne.personalData.name;
@@ -150,15 +157,14 @@ public class MockDatabaseServiceTest extends TestCase{
         Post annePost = new Post(anneName, "anne's post");
         mockDatabaseService.addPost(anneName, annePost);
 
-        assertEquals(mockDatabaseService.getFollowedPosts(anneName).size(), 0);
-        assertEquals(mockDatabaseService.getFollowedPosts(billName).size(), 1);
-
+        assertEquals(1, mockDatabaseService.getFollowedPosts(anneName).size());
+        assertEquals(2, mockDatabaseService.getFollowedPosts(billName).size());
 
         mockDatabaseService.deleteFollower(anneName, billName);
-        assertEquals(mockDatabaseService.getFollowedPosts(billName).size(), 0);
+        assertEquals(1, mockDatabaseService.getFollowedPosts(billName).size());
     }
 
-
+    @Test
     public void testAddGetDeleteMessage() throws UserNotExistsException, InvalidDataException {
         UserData newUser = addNewUser();
         String username = newUser.personalData.name;
@@ -183,7 +189,9 @@ public class MockDatabaseServiceTest extends TestCase{
 
 
     public UserData addNewUser(String username){
-        PersonalData personalData = new PersonalData(username, "b", "01/02/2000", "d", "e");
+//        PersonalData personalData = new PersonalData(username, "b", "01/02/2000", "d", "e");
+        PersonalData personalData = new PersonalData(username, "b", "2000-01-02", "d", "e");
+
         String password = "password";
 
         mockDatabaseService.addUser(username, personalData, password);

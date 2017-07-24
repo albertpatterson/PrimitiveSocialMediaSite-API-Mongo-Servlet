@@ -65,7 +65,8 @@
                         (userSelect)="goProfile($event)"></member-home>
         
         <member-messages    *ngSwitchCase="'messages'" 
-                            [username]="username"></member-messages>
+                            [username]="username"
+                            (userSelect)="goProfile($event)"></member-messages>
         
         <member-premium     *ngSwitchCase="'premium'" 
                             [username]="username"
