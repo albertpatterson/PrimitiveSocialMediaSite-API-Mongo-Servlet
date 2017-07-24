@@ -12,9 +12,11 @@ var core_1 = require("@angular/core");
 var http_1 = require("@angular/http");
 require("rxjs/add/operator/toPromise");
 var handleResponse_1 = require("../utils/handleResponse");
+var auth_service_1 = require("./auth.service");
 var SignUpService = (function () {
-    function SignUpService(http) {
+    function SignUpService(http, authService) {
         this.http = http;
+        this.authService = authService;
         this._signUpUrl = '/signUp';
     }
     SignUpService.prototype.signUp = function (username, location, DOB, business, picture, password) {
@@ -31,6 +33,7 @@ var SignUpService = (function () {
             _this.http.post(_this._signUpUrl, formData)
                 .toPromise()
                 .then(function (resp) { return handleResponse_1.assertStatus(res, resp, 201, "Could not create user."); })
+                .then(function () { return _this.authService.tryLogin(username, password); })
                 .catch(function (err) { return handleResponse_1.handleError(rej, err); });
         });
     };
@@ -38,7 +41,8 @@ var SignUpService = (function () {
 }());
 SignUpService = __decorate([
     core_1.Injectable(),
-    __metadata("design:paramtypes", [http_1.Http])
+    __metadata("design:paramtypes", [http_1.Http,
+        auth_service_1.AuthService])
 ], SignUpService);
 exports.SignUpService = SignUpService;
 //# sourceMappingURL=sign-up.service.js.map

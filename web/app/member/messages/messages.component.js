@@ -37,6 +37,13 @@ var MessagesComponent = (function () {
             this.messages = messages;
         }.bind(this));
     };
+    /**
+     * select a user
+     *
+     * @private
+     * @param {string} selectedUserName - the username of the user to select
+     * @memberof MessagesComponent
+     */
     MessagesComponent.prototype.selectUser = function (selectedUserName) {
         this.userSelect.next(selectedUserName);
     };
