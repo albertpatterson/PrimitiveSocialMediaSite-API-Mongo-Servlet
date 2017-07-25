@@ -21,7 +21,7 @@ PostComponent = __decorate([
         inputs: ["poster", "timestamp", "content"],
         outputs: ["userSelect"],
         templateUrl: "./post.component.html",
-        styleUrls: ['./../../member.component.css', "./post.component.css"]
+        styleUrls: ["./post.component.css"]
     })
 ], PostComponent);
 exports.PostComponent = PostComponent;

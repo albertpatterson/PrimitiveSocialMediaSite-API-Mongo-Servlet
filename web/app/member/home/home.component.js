@@ -86,7 +86,7 @@ HomeComponent = __decorate([
         inputs: ['username'],
         outputs: ['userSelect'],
         templateUrl: './home.component.html',
-        styleUrls: ['./../member.component.css', './home.component.css'],
+        styleUrls: ['./home.component.css'],
     }),
     __metadata("design:paramtypes", [post_service_1.PostService])
 ], HomeComponent);

@@ -7,3 +7,8 @@
     width: 100%;
     margin-top: 25px;
 }
+
+#addContent{
+    display: block;
+    margin: 0 auto;
+}

@@ -79,7 +79,7 @@ ProfileComponent = __decorate([
         selector: 'member-profile',
         inputs: ['username', 'profileUsername'],
         templateUrl: './profile.component.html',
-        styleUrls: ['./../member.component.css', './profile.component.css']
+        styleUrls: ['./profile.component.css']
     }),
     __metadata("design:paramtypes", [personal_data_service_1.PersonalDataService,
         post_service_1.PostService,

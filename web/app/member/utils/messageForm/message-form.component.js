@@ -35,7 +35,7 @@ MessageFormComponent = __decorate([
     core_1.Component({
         selector: 'message-form',
         templateUrl: "./message-form.component.html",
-        styleUrls: ['./../../member.component.css', './message-form.component.css']
+        styleUrls: ['./message-form.component.css']
     })
 ], MessageFormComponent);
 exports.MessageFormComponent = MessageFormComponent;

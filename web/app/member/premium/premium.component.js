@@ -69,7 +69,7 @@ PremiumComponent = __decorate([
         selector: "member-premium",
         inputs: ['username'],
         templateUrl: './premium.component.html',
-        styleUrls: ['./../member.component.css', './premium.component.css']
+        styleUrls: ['./premium.component.css']
     }),
     __metadata("design:paramtypes", [premium_service_1.PremiumService])
 ], PremiumComponent);

@@ -80,7 +80,6 @@ SearchComponent = __decorate([
         outputs: ['userSelect'],
         templateUrl: './search.component.html',
         styleUrls: [
-            './../member.component.css',
             './search.component.css'
         ]
     }),
