@@ -26,7 +26,7 @@ This project will feature an API for the Primitive Social Media Site project. Th
     - [x] delete: delete a premium item
   - [ ] Services
     - [x] DatabaseService
-      - [ ] Mock
+      - [x] Mock
       - [ ] Mongodb
 - [x] View (compiled front end from the PrimitiveSocialMediaSite-Angular-Front-End rep)
 - [ ] Database (integration with MongoDB)
