@@ -18,25 +18,30 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 /**
- * Created by apatters on 6/13/2017.
+ * @desc Service requests related to messages
  */
 public class MessageServlet extends HttpServlet {
 
     private SessionService sessionService = new SessionService();
     private DatabaseService databaseService = MockDatabaseService.getInstance();
 
-    // connect to database on init
+    /**
+     * connect to the database on creation
+     */
     public void init(){
         databaseService.connect();
-        System.out.println("Initialized Post Servlet");
     }
 
-
+    /**
+     * service post request to create a new message
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try{
             sessionService.assertSession(request);
-
 
             String poster = NullParameterException.assertParameter(request, "username");
             String content = NullParameterException.assertParameter(request, "content");
@@ -53,6 +58,13 @@ public class MessageServlet extends HttpServlet {
     }
 
 
+    /**
+     * service request for existing messages
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             sessionService.assertSession(request);
@@ -73,7 +85,13 @@ public class MessageServlet extends HttpServlet {
         }
     }
 
-
+    /**
+     * service request to delete existing message
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             sessionService.assertSession(request);
@@ -99,9 +117,10 @@ public class MessageServlet extends HttpServlet {
     }
 
 
-    // close connection to database on destroy
+    /**
+     * close the connection to the database when destroyed
+     */
     public void destroy(){
         databaseService.close();
-        System.out.println("Destroyed");
     }
 }

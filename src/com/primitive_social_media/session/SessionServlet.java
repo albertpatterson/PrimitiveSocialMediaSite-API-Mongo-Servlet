@@ -10,20 +10,23 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Created by apatters on 6/12/2017.
+ * Service requests for session data
  */
 @WebServlet(name = "SessionServlet")
 public class SessionServlet extends HttpServlet {
 
     private SessionService sessionService = new SessionService();
 
+    /**
+     * connect to the sessoin service
+     */
     public void init(){
         sessionService.connect();
     }
 
 
     /**
-     *
+     * service request to create a new session (sign in)
      * @param request
      * @param response
      * @throws ServletException
@@ -46,7 +49,7 @@ public class SessionServlet extends HttpServlet {
 
 
     /**
-     *
+     * service request to check for an existing session
      * @param request
      * @param response
      * @throws ServletException
@@ -65,7 +68,7 @@ public class SessionServlet extends HttpServlet {
 
 
     /**
-     *
+     * service request to delete an existing session (sign out)
      * @param request
      * @param response
      * @throws ServletException
@@ -86,6 +89,9 @@ public class SessionServlet extends HttpServlet {
         }
     }
 
+    /**
+     * close connection
+     */
     public void destroy(){
         sessionService.close();
     }

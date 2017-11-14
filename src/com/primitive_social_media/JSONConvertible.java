@@ -4,11 +4,21 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Created by apatters on 6/17/2017.
+ * @desc Object containing data that can be converted to a JSON string
  */
 public abstract class JSONConvertible {
+
+    /**
+     * create a JSON string representing the object
+     * @return JSON string representing the object
+     */
     public abstract String toJSON();
 
+    /**
+     * create a JSON string representing an array of objects
+     * @param jsonStrings - JSON strings representing objects
+     * @return JSON string representing the array of objects
+     */
     public static String toJSONListFromStrings(ArrayList<String> jsonStrings) {
         String innerJSON = "";
 
@@ -21,24 +31,17 @@ public abstract class JSONConvertible {
         return String.format("{\"data\": [%s]}", innerJSON);
     }
 
+    /**
+     * create a JSON string representing an array of objects
+     * @param itemList - list of items to be represented as  JSON string
+     * @return JSON string representing the array of objects
+     */
     public static String toJSONList(ArrayList<? extends JSONConvertible> itemList){
         String innerJSON = "";
         ArrayList<String> jsonStrings = new ArrayList<>(itemList.size());
         for(JSONConvertible item : itemList){
             jsonStrings.add(item.toJSON());
         }
-
-//        Iterator<JSONConvertible> itemIter = (Iterator<JSONConvertible>) itemList.iterator();
-//        while(itemIter.hasNext()){
-//            JSONConvertible item = itemIter.next();
-//            if(itemIter.hasNext()){
-//                innerJSON += String.format("%s, ", item.toJSON());
-//            }else{
-//                innerJSON += item.toJSON();
-//            }
-//        }
-
-//        return String.format("{\"data\": [%s]}", innerJSON);
 
         return JSONConvertible.toJSONListFromStrings(jsonStrings);
     }

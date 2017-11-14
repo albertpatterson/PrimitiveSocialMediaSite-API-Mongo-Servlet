@@ -4,7 +4,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Created by apatters on 6/20/2017.
+ * @desc Exception representing an attempt to access data of a non existent user
  */
 public class UserNotExistsException extends ServiceException {
 
@@ -15,6 +15,7 @@ public class UserNotExistsException extends ServiceException {
         responseStatus = HttpServletResponse.SC_NOT_FOUND;
     }
 
+    @Override
     public String getMessage(){
         return String.format("User \\\"%s\\\" does not exist.", username);
     }

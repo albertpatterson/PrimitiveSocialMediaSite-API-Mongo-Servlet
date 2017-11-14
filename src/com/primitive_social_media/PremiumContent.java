@@ -1,12 +1,16 @@
 package com.primitive_social_media;
 
 /**
- * Created by apatters on 7/3/2017.
+ * @desc Representation of premium content
  */
 public class PremiumContent extends JSONConvertible {
 
     public String content;
 
+    /**
+     * create an item of premium content
+     * @param content - the content to include
+     */
     public PremiumContent(String content){
         this.content = content;
     }

@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by apatters on 6/11/2017.
+ * @desc service requests for personal data of users
  */
 @WebServlet(name = "PersonalDataServlet")
 public class PersonalDataServlet extends HttpServlet {
@@ -30,12 +30,20 @@ public class PersonalDataServlet extends HttpServlet {
     private DatabaseService databaseService = MockDatabaseService.getInstance();
     private SessionService sessionService = new SessionService();
 
-
+    /**
+     * connect to the database on creation
+     */
     public void init(){
-        System.out.println("Initialized UserServlet");
+        databaseService.connect();
     }
 
-
+    /**
+     * service request to create  a new user
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             String username = NullParameterException.assertParameter(request, "username");
@@ -59,6 +67,13 @@ public class PersonalDataServlet extends HttpServlet {
     }
 
 
+    /**
+     * service request to get the data of an existing user
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         try {
@@ -89,7 +104,12 @@ public class PersonalDataServlet extends HttpServlet {
         }
     }
 
-
+    /**
+     * service request to update data of an existing user
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         try {
@@ -121,7 +141,13 @@ public class PersonalDataServlet extends HttpServlet {
         }
     }
 
-
+    /**
+     * service request to delete an existing user
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         try{
@@ -139,10 +165,10 @@ public class PersonalDataServlet extends HttpServlet {
         }
     }
 
-
+    /**
+     * close the connection on destruction
+     */
     public void destroy(){
-
-//        databaseService.close();
-        System.out.println("destroyed UserServlet");
+        databaseService.close();
     }
 }

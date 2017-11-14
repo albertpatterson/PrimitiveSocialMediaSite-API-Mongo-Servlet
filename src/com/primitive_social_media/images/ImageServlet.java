@@ -14,17 +14,25 @@ import java.net.URLDecoder;
 import java.nio.file.Files;
 
 /**
- * Created by apatters on 7/5/2017.
+ * @desc Service requests related to images
  */
 @WebServlet(name = "ImageServlet")
 public class ImageServlet extends HttpServlet {
 
     private SessionService sessionService = new SessionService();
 
+// todo: implement image post
 //    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 //
 //    }
 
+    /**
+     * service request for an image
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 
             String filename = URLDecoder.decode(request.getPathInfo().substring(1), "UTF-8");

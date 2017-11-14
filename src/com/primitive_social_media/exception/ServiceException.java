@@ -6,16 +6,20 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * Created by apatters on 6/21/2017.
+ * @desc Exception representing an issue servicing a request
  */
 public abstract class ServiceException extends Exception {
 
     public int responseStatus;
 
+    /**
+     * respond to the request with information about the Exception that occurred
+     * @param response - the response object corresponding to the request
+     * @throws IOException
+     */
     public void respond(HttpServletResponse response) throws IOException {
         response.setStatus(responseStatus);
 
-//        response.setContentType("text/plain");
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
         String msg = getMessage();

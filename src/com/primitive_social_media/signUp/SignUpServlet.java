@@ -20,21 +20,28 @@ import java.io.InputStream;
 import java.nio.file.Paths;
 
 /**
- * Created by apatters on 7/4/2017.
+ * @desc Service requests to sign up for the app
  */
 @WebServlet(name = "SignUpServlet")
 public class SignUpServlet extends HttpServlet {
 
-
     private SessionService sessionService = new SessionService();
     private DatabaseService databaseService = MockDatabaseService.getInstance();
 
-    // connect to database on init
+    /**
+     * connect to the database
+     */
     public void init(){
         databaseService.connect();
-        System.out.println("Initialized Post Servlet");
     }
 
+    /**
+     * service request to create a new user
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
 
@@ -89,8 +96,9 @@ public class SignUpServlet extends HttpServlet {
 
     }
 
-
-    // close connection to database on destroy
+    /**
+     * close the connection to the database
+     */
     public void destroy(){
         databaseService.close();
         System.out.println("Destroyed");

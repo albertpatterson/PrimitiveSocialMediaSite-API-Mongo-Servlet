@@ -3,7 +3,7 @@ package com.primitive_social_media.exception;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * Created by apatters on 6/21/2017.
+ * @desc Exception representing missing mandatory parameter in a request
  */
 public class NullParameterException extends ServiceException{
 

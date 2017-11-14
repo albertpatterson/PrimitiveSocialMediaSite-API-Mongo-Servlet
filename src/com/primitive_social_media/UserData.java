@@ -3,7 +3,7 @@ package com.primitive_social_media;
 import java.util.ArrayList;
 
 /**
- * Created by apatters on 6/19/2017.
+ * @desc Representation of user data stored in the database
  */
 public class UserData {
 
@@ -16,6 +16,13 @@ public class UserData {
     public ArrayList<String> following = new ArrayList<>();
     public ArrayList<PremiumContent> premiumContent = new ArrayList<>();
 
+    /**
+     * create a new instance of user data
+     * @param username the name of the user
+     * @param password the user's password
+     * @param personalData the user's personal data
+     * @param personalData the user's personal data
+     */
     public UserData(String username, String password, PersonalData personalData){
         this.username = username;
         this.password = password;

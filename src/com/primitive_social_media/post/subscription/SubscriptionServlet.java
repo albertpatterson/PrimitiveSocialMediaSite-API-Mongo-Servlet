@@ -19,7 +19,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 /**
- * Created by apatters on 6/11/2017.
+ * @desc service requests for subcriptions
  */
 @WebServlet(name = "PersonalDataServlet")
 public class SubscriptionServlet extends HttpServlet {
@@ -30,10 +30,14 @@ public class SubscriptionServlet extends HttpServlet {
     // connect to database on init
     public void init(){
         databaseService.connect();
-        System.out.println("Initialized Post Servlet");
     }
 
-
+    /**
+     * service request to create a new subscription
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try{
             sessionService.assertSession(request);
@@ -53,7 +57,12 @@ public class SubscriptionServlet extends HttpServlet {
         }
     }
 
-
+    /**
+     * service request to get existing subscriptions
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try{
             sessionService.assertSession(request);
@@ -76,7 +85,13 @@ public class SubscriptionServlet extends HttpServlet {
         }
     }
 
-
+    /**
+     * service requests to delete an existing subscription
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             sessionService.assertSession(request);
@@ -99,7 +114,6 @@ public class SubscriptionServlet extends HttpServlet {
     // close connection to database on destroy
     public void destroy(){
         databaseService.close();
-        System.out.println("Destroyed");
     }
 }
 

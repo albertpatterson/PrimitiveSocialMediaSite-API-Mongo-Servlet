@@ -12,28 +12,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by apatters on 6/17/2017.
+ * @desk a mock database service storing data in memory
  */
 public class MockDatabaseService extends DatabaseService{
 
-    public HashMap<String, UserData> userData = new HashMap<>();
-
-//    // personal data of personalData
-//    private HashMap<String, PersonalData> userData.personalData = new HashMap<>();
-//    // passwords of each personalData
-//    private HashMap<String, String> passwordMap = new HashMap<>();
-//    // own post of personalData
-//    private HashMap<String, ArrayList<Post>> ownPostsMap = new HashMap<>();
-//    // messages sent to each user
-//    private HashMap<String, ArrayList<Post>> messagesMap = new HashMap<>();
-//    // array of personalData following a user
-//    private HashMap<String, ArrayList<String>> followedByMap = new HashMap<>();
-//    // array of personalData that a user follows
-//    private HashMap<String, ArrayList<String>> followingMap = new HashMap<>();
+    public  static HashMap<String, UserData> userData = new HashMap<>();
 
     private static MockDatabaseService instance = null;
 
+    private static Boolean connected = false;
 
+    /**
+     * get the mock database instance
+     * @return the instance of the mock database
+     */
     public static MockDatabaseService getInstance(){
         if(instance==null){
             instance = new MockDatabaseService();
@@ -44,13 +36,17 @@ public class MockDatabaseService extends DatabaseService{
 
     private MockDatabaseService(){}
 
-    private Boolean connected = false;
-    public void  connect() {
+    /**
+     * initialize the data stored in memory, emulating a connection to the database
+     */
+    @Override
+    public void connect() {
 
         if(connected){
             return;
         }
 
+        // create several mock users
         ArrayList<String> mockUserNames = new ArrayList<>(Arrays.asList("Anne", "Kim", "Dan", "Bob", "Pam", "Jen"));
         for (int idx = 0; idx < mockUserNames.size(); idx++) {
 
@@ -60,6 +56,7 @@ public class MockDatabaseService extends DatabaseService{
             addUser(mockUserName, mockUserData.personalData, mockUserData.password);
         }
 
+        // update each user with posts, premium content, followers, and messages
         for (int idx = 0; idx < mockUserNames.size(); idx++) {
 
             String mockUserName = mockUserNames.get(idx);
@@ -74,45 +71,16 @@ public class MockDatabaseService extends DatabaseService{
                 addPremium(mockUserName, new PremiumContent(MockUserData.imageInc()));
                 addPremium(mockUserName, new PremiumContent(MockUserData.imageInc()));
 
-                // add activity by friends (the next 2 users)
-
-//                addMessage(mockUserName, new Post("friend1", "Post 1"));
-//                addMessage(mockUserName, new Post("friend2", "Post 2"));
-
+                // add subscriptions and messages
                 int friendIdx;
                 int nFriends = 2;
                 String friendName;
-//                ArrayList<String> following = new ArrayList<>(2);
                 for(int friendOffset = 1; friendOffset<=nFriends; friendOffset++){
                     friendIdx = (idx + friendOffset) % mockUserNames.size();
                     friendName = mockUserNames.get(friendIdx);
                     addMessage(mockUserName, new Post(friendName, "Post from friend"));
                     addSubscription(mockUserName, friendName);
                 }
-
-//                int start = (idx + 1) % mockUserNames.size();
-
-
-//                followedBy.add(mockUserNames.get(start++));
-
-//                start = (start + 1) % mockUserNames.size();
-//                followedBy.add(mockUserNames.get(start));
-
-//                ArrayList<String> following = new ArrayList<>(2);
-
-//                start = (start + 1) % mockUserNames.size();
-//                following.add(mockUserNames.get(start));
-//                start = (start + 1) % mockUserNames.size();
-//                following.add(mockUserNames.get(start));
-
-//                following.forEach(followee -> {
-//                    try {
-//                        addSubscription(mockUserName, followee);
-//                    } catch (UserNotExistsException e) {
-//                        e.printStackTrace();
-//                    }
-//                });
-
             } catch (UserNotExistsException e) {
                 e.printStackTrace();
             }
@@ -122,10 +90,9 @@ public class MockDatabaseService extends DatabaseService{
     }
 
     @Override
-    public void close() {
-        userData = new HashMap<>();
-    }
+    public void close() {}
 
+    @Override
     public void addUser(String username, PersonalData personalData, String password){
         if (userData.containsKey(username)) {
             String msg = String.format("user %s alread exists", username);
@@ -136,27 +103,30 @@ public class MockDatabaseService extends DatabaseService{
         userData.put(username, newUserData);
     }
 
+    @Override
     public Boolean checkUser(String username){
         return userData.containsKey(username);
     }
 
+    /**
+     * assert that a user exists in the database
+     * @param username - the name of the user exected to exist
+     * @throws UserNotExistsException
+     */
     public void assertUserExists(String username) throws UserNotExistsException {
         if(!checkUser(username)){
             throw new UserNotExistsException(username);
         }
     }
 
+    @Override
     public void deleteUser(String username) throws UserNotExistsException {
         assertUserExists(username);
         userData.remove(username);
         // consider how to update the follow maps of other users that include the deleted user
     }
 
-    /**
-     * find the personal data for a single user
-     * @param username the user's username
-     * @return the personal data
-     */
+    @Override
     public PersonalData findPersonalData(String username) throws UserNotExistsException {
         assertUserExists(username);
         String query = ("^"+username+"$");
@@ -168,11 +138,7 @@ public class MockDatabaseService extends DatabaseService{
         return matches.get(username);
     }
 
-    /**
-     * find the personal data of multiple personalData
-     * @param query the query string to match multiple user names
-     * @return map of matching personalData
-     */
+    @Override
     public HashMap<String, PersonalData> findPersonalDataMultiple(String query){
 
         Pattern p = Pattern.compile(query);
@@ -187,40 +153,25 @@ public class MockDatabaseService extends DatabaseService{
     return matches;
     }
 
-    /**
-     * set the personal data of a user
-     * @param username - user's username
-     * @param personalData - personal data
-     */
+    @Override
     public void setPersonalData(String username, PersonalData personalData) throws UserNotExistsException {
         assertUserExists(username);
         userData.get(username).personalData = personalData;
     }
 
-
-    /**
-     * get a user's password
-     * @param username
-     * @return password
-     */
+    @Override
     public String getPassword(String username) throws UserNotExistsException {
         assertUserExists(username);
         return userData.get(username).password;
     }
 
-    /**
-     * set the password of a user
-     * @param username
-     * @param password - updated password
-     */
+    @Override
     public void setPassword(String username, String password) throws UserNotExistsException {
         assertUserExists(username);
         userData.get(username).password = password;
     }
 
-
-
-
+    @Override
     public ArrayList<Post> getOwnPosts(String username) throws UserNotExistsException {
         assertUserExists(username);
         String query = ("^"+username+"$");
@@ -228,7 +179,12 @@ public class MockDatabaseService extends DatabaseService{
         // consider checking if user is not found
         return matches;
     }
-    // consider removing
+
+    /**
+     * get the posts created by several users
+     * @param query - query to match several users
+     * @return - collection of posts created by matching users
+     */
     public ArrayList<Post> getOwnPostsMultiple(String query){
         ArrayList<Post> matches = new ArrayList<>();
         for(HashMap.Entry<String, UserData> entry: userData.entrySet()){
@@ -241,6 +197,7 @@ public class MockDatabaseService extends DatabaseService{
         return matches;
     }
 
+    @Override
     public ArrayList<Post> getFollowedPosts(String username) throws UserNotExistsException {
         assertUserExists(username);
         ArrayList<Post> followedPosts = new ArrayList<>();
@@ -252,11 +209,13 @@ public class MockDatabaseService extends DatabaseService{
         return followedPosts;
     }
 
+    @Override
     public void addPost(String username, Post post) throws UserNotExistsException {
         assertUserExists(username);
         userData.get(username).ownPosts.add(post);
     }
 
+    @Override
     public void deletePost(String username, int idx) throws UserNotExistsException, InvalidDataException {
         assertUserExists(username);
         ArrayList<Post> posts = userData.get(username).ownPosts;
@@ -267,16 +226,19 @@ public class MockDatabaseService extends DatabaseService{
         }
     }
 
+    @Override
     public ArrayList<Post> getMessages(String username) throws UserNotExistsException {
         assertUserExists(username);
         return userData.get(username).messages;
     }
 
+    @Override
     public void addMessage(String recipient, Post message) throws UserNotExistsException {
         assertUserExists(recipient);
         userData.get(recipient).messages.add(message);
     }
 
+    @Override
     public void deleteMessage(String username, int idx) throws UserNotExistsException, InvalidDataException {
         assertUserExists(username);
         ArrayList<Post> messages = userData.get(username).messages;
@@ -287,6 +249,7 @@ public class MockDatabaseService extends DatabaseService{
         }
     }
 
+    @Override
     public void addFollower(String followeeUsername, String followerUsername) throws UserNotExistsException {
         assertUserExists(followeeUsername);
         assertUserExists(followerUsername);
@@ -297,6 +260,7 @@ public class MockDatabaseService extends DatabaseService{
         }
     }
 
+    @Override
     public void deleteFollower(String followeeUsername, String followerUsername) throws UserNotExistsException {
         assertUserExists(followeeUsername);
         assertUserExists(followerUsername);
@@ -336,7 +300,7 @@ public class MockDatabaseService extends DatabaseService{
         return userData.get(username).following.indexOf(followee);
     }
 
-
+    @Override
     protected void addFollowee(String followeeUsername, String followerUsername) throws UserNotExistsException {
         assertUserExists(followeeUsername);
         assertUserExists(followerUsername);
@@ -346,6 +310,7 @@ public class MockDatabaseService extends DatabaseService{
         }
     }
 
+    @Override
     protected void deleteFollowee(String followeeUsername, String followerUsername) throws UserNotExistsException {
         assertUserExists(followeeUsername);
         assertUserExists(followerUsername);
@@ -356,35 +321,47 @@ public class MockDatabaseService extends DatabaseService{
         }
     }
 
-
+    @Override
     public ArrayList<PremiumContent> getPremium(String username) throws UserNotExistsException {
         assertUserExists(username);
         return userData.get(username).premiumContent;
     }
 
+    @Override
     public void addPremium(String username, PremiumContent content) throws UserNotExistsException {
         assertUserExists(username);
         userData.get(username).premiumContent.add(content);
     }
 
+    @Override
     public void deletePremium(String username, int index) throws UserNotExistsException {
         assertUserExists(username);
         userData.get(username).premiumContent.remove(index);
     }
 }
 
-
+/**
+ * @desc mock data of a user
+ */
 class MockUserData {
     public PersonalData personalData;
     public String password;
 
     private static int imgCount = 0;
 
+    /**
+     * increment a counter to cycle through images, so that various images are used throughout the app
+     * @return
+     */
     public static String imageInc(){
         imgCount=(imgCount+1)%20;
         return String.format("static/%d.png",imgCount);
     }
 
+    /**
+     * create mock data for a user
+     * @param username - the name of the user
+     */
     public MockUserData(String username) {
         personalData = new PersonalData(username, username + "_location", new Date(), username + "_business", imageInc());
         password = username + "pw";

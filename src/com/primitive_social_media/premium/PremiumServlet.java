@@ -20,7 +20,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 
 /**
- * Created by apatters on 7/3/2017.
+ * @desc Service requests for premium content
  */
 @WebServlet(name = "PremiumServlet")
 public class PremiumServlet extends HttpServlet {
@@ -30,10 +30,14 @@ public class PremiumServlet extends HttpServlet {
     // connect to database on init
     public void init(){
         databaseService.connect();
-        System.out.println("Initialized Premium Servlet");
     }
 
-
+    /**
+     * service request to create a new premium item
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try{
             sessionService.assertSession(request);
@@ -53,7 +57,12 @@ public class PremiumServlet extends HttpServlet {
         }
     }
 
-
+    /**
+     * service request to get existing premium items
+     * @param request
+     * @param response
+     * @throws IOException
+     */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
             sessionService.assertSession(request);
@@ -74,7 +83,13 @@ public class PremiumServlet extends HttpServlet {
         }
     }
 
-
+    /**
+     * service request to delete existing premium item
+     * @param request
+     * @param response
+     * @throws ServletException
+     * @throws IOException
+     */
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try{
             sessionService.assertSession(request);
@@ -100,9 +115,10 @@ public class PremiumServlet extends HttpServlet {
     }
 
 
-    // close connection to database on destroy
+    /**
+     * close the connection to the database on destruction
+     */
     public void destroy(){
         databaseService.close();
-        System.out.println("Destroyed");
     }
 }

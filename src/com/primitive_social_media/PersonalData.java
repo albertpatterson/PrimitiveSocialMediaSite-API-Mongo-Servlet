@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by apatters on 6/17/2017.
+ * @desc Personal data of a user
  */
 public class PersonalData extends JSONConvertible {
     public String name;
@@ -16,13 +16,20 @@ public class PersonalData extends JSONConvertible {
     public String business;
     public String picture;
 
+    /**
+     * Create an item of personal data for a user
+     * @param name - username
+     * @param location - location
+     * @param DOBString - date of birth
+     * @param business - business
+     * @param picture - profile picture
+     */
     public PersonalData(String name, String location, String DOBString, String business, String picture){
         this.name = name;
         this.location = location;
         this.business = business;
         this.picture = picture;
 
-//        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         try {
             this.DOB = formatter.parse(DOBString);
@@ -31,6 +38,14 @@ public class PersonalData extends JSONConvertible {
         }
     }
 
+    /**
+     * Create an item of personal data for a user
+     * @param name - username
+     * @param location - location
+     * @param DOB - date of birth
+     * @param business - business
+     * @param picture - profile picture
+     */
     public PersonalData(String name, String location, Date DOB, String business, String picture){
         this.name = name;
         this.location = location;
@@ -39,18 +54,32 @@ public class PersonalData extends JSONConvertible {
         this.picture = picture;
     }
 
+    /**
+     * clone an item of persnal data
+     * @param data cloned personal data
+     */
     public PersonalData(PersonalData data){
         this(data.name, data.location, data.DOB, data.business, data.picture);
     }
 
+    /**
+     * get the date of birth as a string
+     * @return string representing the data of birth
+     */
     public String getDOBString(){
         return PersonalData.DOBFormatter.format(DOB);
     }
 
+    /**
+     * set the date of birth string
+     * @param DOBString the date of birth
+     * @throws ParseException
+     */
     public void setDOBString(String DOBString) throws ParseException {
         DOB = PersonalData.DOBFormatter.parse(DOBString);
     }
 
+    @Override
     public String toJSON(){
         return  "{" +
                 "\"name\": \"" +       name +"\", "+

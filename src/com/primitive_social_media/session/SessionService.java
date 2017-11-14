@@ -10,20 +10,23 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
- * Created by apatters on 6/12/2017.
+ * @desc Service for managing user session data
  */
 public class SessionService {
 
     private DatabaseService databaseService = MockDatabaseService.getInstance();
 
+    /**
+     * connect to the database
+     */
     public void connect(){
         databaseService.connect();
     }
 
     /**
-     *
-     * @param request
-     * @return
+     * sign a user into the app
+     * @param request the sign in request
+     * @return boolean indicating if sign in was successful
      */
     public boolean signIn(HttpServletRequest request) throws UserNotExistsException, NullParameterException {
         String username = NullParameterException.assertParameter(request,"username");
@@ -38,6 +41,12 @@ public class SessionService {
         return check;
     }
 
+    /**
+     * assert that the user has a valid session
+     * @param request - the request sent by the user
+     * @throws SessionNotValidException
+     * @throws NullParameterException
+     */
     public void assertSession(HttpServletRequest request) throws SessionNotValidException, NullParameterException {
 
         if(!request.isRequestedSessionIdValid()){
@@ -54,8 +63,8 @@ public class SessionService {
 
 
     /**
-     *
-      * @param request
+     * delete an existing session (sign out)
+     * @param request the sign out request
      */
     public void deleteSession(HttpServletRequest request){
         HttpSession session = request.getSession();
@@ -63,8 +72,10 @@ public class SessionService {
     }
 
 
-
+    /**
+     * close the connection to the database
+     */
     public void close(){
-
+        databaseService.connect();
     }
 }
